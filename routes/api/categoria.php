@@ -1,7 +1,5 @@
 <?php
 
-namespace routes\api;
-
 use App\Http\Controllers\CategoriaController;
 use Illuminate\Support\Facades\Route;
 
