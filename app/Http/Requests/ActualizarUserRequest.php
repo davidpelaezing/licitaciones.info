@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Auth;
 
 class ActualizarUserRequest extends FormRequest
 {
@@ -27,8 +28,9 @@ class ActualizarUserRequest extends FormRequest
     {
         return [
             'nombre' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,' . $this->user->id,
+            'email' => 'required|email|max:255|unique:users,id,' . $this->user->id,
             'password' => 'required|string|min:8|max:255',
+            'admin' => 'required|boolean'
         ];
     }
 

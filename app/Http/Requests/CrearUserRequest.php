@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Auth;
 
 class CrearUserRequest extends FormRequest
 {
@@ -29,6 +30,7 @@ class CrearUserRequest extends FormRequest
             'nombre' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|string|min:8|max:255',
+            'admin' => 'required|boolean'
         ];
     }
 

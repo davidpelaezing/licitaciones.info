@@ -52,7 +52,7 @@ class UserController extends Controller
     public function actualizar(ActualizarUserRequest $request, User $user): JsonResponse
     {
         try {
-            $user->updated($request->validated());
+            $user->update($request->validated());
         } catch (\Throwable $th) {
             return response()->json($th->getMessage(), 400);
         }
