@@ -21,3 +21,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 require __DIR__ . '/api/auth.php';
 require __DIR__ . '/api/categoria.php';
 require __DIR__ . '/api/comentario.php';
+require __DIR__ . '/api/producto.php';
