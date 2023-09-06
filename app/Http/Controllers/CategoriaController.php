@@ -52,7 +52,7 @@ class CategoriaController extends Controller
     public function actualizar(ActualizarCategoriaRequest $request, Categoria $categoria): JsonResponse
     {
         try {
-            $categoria->updated($request->validated());
+            $categoria->update($request->validated());
         } catch (\Throwable $th) {
             return response()->json($th->getMessage(), 400);
         }
