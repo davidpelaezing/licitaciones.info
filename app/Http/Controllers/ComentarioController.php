@@ -38,7 +38,7 @@ class ComentarioController extends Controller
     public function crear(CrearComentarioRequest $request): JsonResponse
     {
         try {
-            $data = $this->agregarCamporUserId($request->validated());
+            $data = $this->agregarCampoUserId($request->validated());
             $comentario = Comentario::create($data);
         } catch (\Throwable $th) {
             return response()->json($th->getMessage(), 400);

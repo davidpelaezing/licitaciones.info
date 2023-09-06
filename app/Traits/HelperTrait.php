@@ -14,7 +14,7 @@ trait HelperTrait
      * @return array
      * @author David Peláez
      */
-    public function agregarCamporUserId($data, $user_id = null): array
+    public function agregarCampoUserId($data, $user_id = null): array
     {
         $data['user_id'] = $user_id ?? Auth::id();
         return $data;
