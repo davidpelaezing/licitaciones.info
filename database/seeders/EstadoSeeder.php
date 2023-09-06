@@ -1,0 +1,30 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Estado;
+use Illuminate\Database\Seeder;
+
+class EstadoSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $estados = [
+            [
+                "nombre" => "abierta"
+            ],
+            [
+                "nombre" => "pagada"
+            ],
+            [
+                "nombre" => "cancelada"
+            ]
+        ];
+        Estado::insert($estados);
+    }
+}
