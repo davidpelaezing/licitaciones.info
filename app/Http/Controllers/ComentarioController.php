@@ -2,84 +2,93 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ActualizarComentarioRequest;
+use App\Http\Requests\CrearComentarioRequest;
 use App\Models\Comentario;
+use App\Traits\HelperTrait;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ComentarioController extends Controller
 {
+    use HelperTrait;
+
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Lista todas los comentarios
+     * @param Request $request
+     * @return JsonResponse
+     * @author David Peláez
      */
-    public function index()
+    public function listar(Request $request): JsonResponse
     {
-        //
+        try {
+            $comentarios = Comentario::all();
+        } catch (\Throwable $th) {
+            return response()->json($th->getMessage(), 400);
+        }
+        return response()->json($comentarios);
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Almacena un comentario
+     * @param Request $request
+     * @return JsonResponse
+     * @author David Peláez
      */
-    public function create()
+    public function crear(CrearComentarioRequest $request): JsonResponse
     {
-        //
+        try {
+            $data = $this->agregarCamporUserId($request->validated());
+            $comentario = Comentario::create($data);
+        } catch (\Throwable $th) {
+            return response()->json($th->getMessage(), 400);
+        }
+        return response()->json($comentario, 201);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * Actualiza un comentario
+     * @param Request $request
+     * @param Comentario $comentario
+     * @return JsonResponse
+     * @author David Peláez
      */
-    public function store(Request $request)
+    public function actualizar(ActualizarComentarioRequest $request, Comentario $comentario): JsonResponse
     {
-        //
+        try {
+            $comentario->updated($request->validated());
+        } catch (\Throwable $th) {
+            return response()->json($th->getMessage(), 400);
+        }
+        return response()->json($comentario);
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Comentario  $comentario
-     * @return \Illuminate\Http\Response
+     * muestra un comentario
+     * @param Request $request
+     * @param comentario $comentario
+     * @return JsonResponse
+     * @author David Peláez
      */
-    public function show(Comentario $comentario)
+    public function consultar(Request $request, Comentario $comentario): JsonResponse
     {
-        //
+        return response()->json($comentario);
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Comentario  $comentario
-     * @return \Illuminate\Http\Response
+     * cambia el estado de una comentario
+     * @param Request $request
+     * @param Comentario $comentario
+     * @return JsonResponse
+     * @author David Peláez 
      */
-    public function edit(Comentario $comentario)
+    public function cambiarEstado(Request $request, Comentario $comentario): JsonResponse
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Comentario  $comentario
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Comentario $comentario)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Comentario  $comentario
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Comentario $comentario)
-    {
-        //
+        try {
+            $comentario->cambiarEstado();
+        } catch (\Throwable $th) {
+            return response()->json($th->getMessage(), 400);
+        }
+        return response()->json($comentario);
     }
 }
