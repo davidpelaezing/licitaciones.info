@@ -2,84 +2,90 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ActualizarTagRequest;
+use App\Http\Requests\CrearTagRequest;
 use App\Models\Tag;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class TagController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Lista todas los tags
+     * @param Request $request
+     * @return JsonResponse
+     * @author David Peláez
      */
-    public function index()
+    public function listar(Request $request): JsonResponse
     {
-        //
+        try {
+            $tags = Tag::all();
+        } catch (\Throwable $th) {
+            return response()->json($th->getMessage(), 400);
+        }
+        return response()->json($tags);
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Almacena un tag
+     * @param Request $request
+     * @return JsonResponse
+     * @author David Peláez
      */
-    public function create()
+    public function crear(CrearTagRequest $request): JsonResponse
     {
-        //
+        try {
+            $data = $this->agregarCampoUserId($request->validated());
+            $tag = Tag::create($data);
+        } catch (\Throwable $th) {
+            return response()->json($th->getMessage(), 400);
+        }
+        return response()->json($tag, 201);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * Actualiza un tag
+     * @param Request $request
+     * @param Tag $tag
+     * @return JsonResponse
+     * @author David Peláez
      */
-    public function store(Request $request)
+    public function actualizar(ActualizarTagRequest $request, Tag $tag): JsonResponse
     {
-        //
+        try {
+            $tag->updated($request->validated());
+        } catch (\Throwable $th) {
+            return response()->json($th->getMessage(), 400);
+        }
+        return response()->json($tag);
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Tag  $tag
-     * @return \Illuminate\Http\Response
+     * muestra un tag
+     * @param Request $request
+     * @param Tag $tag
+     * @return JsonResponse
+     * @author David Peláez
      */
-    public function show(Tag $tag)
+    public function consultar(Request $request, Tag $tag): JsonResponse
     {
-        //
+        return response()->json($tag);
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Tag  $tag
-     * @return \Illuminate\Http\Response
+     * cambia el estado de un tag
+     * @param Request $request
+     * @param Tag $tag
+     * @return JsonResponse
+     * @author David Peláez 
      */
-    public function edit(Tag $tag)
+    public function cambiarEstado(Request $request, Tag $tag): JsonResponse
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Tag  $tag
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Tag $tag)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Tag  $tag
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Tag $tag)
-    {
-        //
+        try {
+            $tag->cambiarEstado();
+        } catch (\Throwable $th) {
+            return response()->json($th->getMessage(), 400);
+        }
+        return response()->json($tag);
     }
 }
