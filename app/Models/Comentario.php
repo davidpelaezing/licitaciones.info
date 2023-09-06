@@ -15,7 +15,7 @@ class Comentario extends Model
 
     public function producto()
     {
-        $this->belongsTo(Producto::class);
+        return $this->belongsTo(Producto::class);
     }
 
     /* Funciones */
