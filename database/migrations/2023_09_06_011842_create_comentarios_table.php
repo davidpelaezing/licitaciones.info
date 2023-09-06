@@ -17,6 +17,7 @@ class CreateComentariosTable extends Migration
             $table->id();
             $table->foreignId('producto_id')->constrained('productos');
             $table->text('texto');
+            $table->boolean('estado')->default(true);
             $table->timestamps();
         });
     }
