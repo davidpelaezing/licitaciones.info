@@ -2,84 +2,89 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ActualizarCategoriaRequest;
+use App\Http\Requests\CrearCategoriaRequest;
 use App\Models\Categoria;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class CategoriaController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Lista todas las categorias
+     * @param Request $request
+     * @return JsonResponse
+     * @author David Peláez
      */
-    public function index()
+    public function listar(Request $request): JsonResponse
     {
-        //
+        try {
+            $categorias = Categoria::all();
+        } catch (\Throwable $th) {
+            return response()->json($th->getMessage(), 400);
+        }
+        return response()->json($categorias);
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Almacena una categoria
+     * @param Request $request
+     * @return JsonResponse
+     * @author David Peláez
      */
-    public function create()
+    public function crear(CrearCategoriaRequest $request): JsonResponse
     {
-        //
+        try {
+            $categoria = Categoria::create($request->validated());
+        } catch (\Throwable $th) {
+            return response()->json($th->getMessage(), 400);
+        }
+        return response()->json($categoria, 201);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * Actualiza una categoria
+     * @param Request $request
+     * @param Categoria $categoria
+     * @return JsonResponse
+     * @author David Peláez
      */
-    public function store(Request $request)
+    public function actualizar(ActualizarCategoriaRequest $request, Categoria $categoria): JsonResponse
     {
-        //
+        try {
+            $categoria->updated($request->validated());
+        } catch (\Throwable $th) {
+            return response()->json($th->getMessage(), 400);
+        }
+        return response()->json($categoria);
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Categoria  $categoria
-     * @return \Illuminate\Http\Response
+     * muestra una categoria
+     * @param Request $request
+     * @param Categoria $categoria
+     * @return JsonResponse
+     * @author David Peláez
      */
-    public function show(Categoria $categoria)
+    public function consultar(Request $request, Categoria $categoria): JsonResponse
     {
-        //
+        return response()->json($categoria);
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Categoria  $categoria
-     * @return \Illuminate\Http\Response
+     * cambia el estado de una categoria
+     * @param Request $request
+     * @param Categoria $categoria
+     * @return JsonResponse
+     * @author David Peláez 
      */
-    public function edit(Categoria $categoria)
+    public function cambiarEstado(Request $request, Categoria $categoria): JsonResponse
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Categoria  $categoria
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Categoria $categoria)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Categoria  $categoria
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Categoria $categoria)
-    {
-        //
+        try {
+            $categoria->cambiarEstado();
+        } catch (\Throwable $th) {
+            return response()->json($th->getMessage(), 400);
+        }
+        return response()->json($categoria);
     }
 }
