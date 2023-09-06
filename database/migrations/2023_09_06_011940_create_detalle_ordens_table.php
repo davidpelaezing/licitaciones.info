@@ -17,7 +17,7 @@ class CreateDetalleOrdensTable extends Migration
             $table->id();
             $table->foreignId('orden_id')->constrained('ordenes');
             $table->foreignId('producto_id')->constrained('productos');
-            $table->int('cantidad');
+            $table->integer('cantidad');
             $table->timestamps();
         });
     }

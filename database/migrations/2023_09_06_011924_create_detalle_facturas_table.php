@@ -17,7 +17,7 @@ class CreateDetalleFacturasTable extends Migration
             $table->id();
             $table->foreignId('factura_id')->constrained('facturas');
             $table->foreignId('producto_id')->constrained('productos');
-            $table->int('cantidad');
+            $table->integer('cantidad');
             $table->double('precio_unitario');
             $table->double('total');
             $table->timestamps();
