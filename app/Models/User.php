@@ -50,4 +50,17 @@ class User extends Authenticatable
     {
         $this->attributes['password'] = Hash::make($value);
     }
+
+    /* Funciones */
+
+    /**
+     * Cambia el estado, asigna el contrario del actual
+     * @return boolean
+     */
+    public function cambiarEstado(): bool
+    {
+        return $this->update([
+            'estado' => !$this->estado
+        ]);
+    }
 }

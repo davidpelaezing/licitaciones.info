@@ -22,3 +22,5 @@ require __DIR__ . '/api/auth.php';
 require __DIR__ . '/api/categoria.php';
 require __DIR__ . '/api/comentario.php';
 require __DIR__ . '/api/producto.php';
+require __DIR__ . '/api/tag.php';
+require __DIR__ . '/api/user.php';
