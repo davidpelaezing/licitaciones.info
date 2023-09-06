@@ -35,8 +35,7 @@ class TagController extends Controller
     public function crear(CrearTagRequest $request): JsonResponse
     {
         try {
-            $data = $this->agregarCampoUserId($request->validated());
-            $tag = Tag::create($data);
+            $tag = Tag::create($request->validated());
         } catch (\Throwable $th) {
             return response()->json($th->getMessage(), 400);
         }
@@ -53,7 +52,7 @@ class TagController extends Controller
     public function actualizar(ActualizarTagRequest $request, Tag $tag): JsonResponse
     {
         try {
-            $tag->updated($request->validated());
+            $tag->update($request->validated());
         } catch (\Throwable $th) {
             return response()->json($th->getMessage(), 400);
         }
