@@ -56,7 +56,7 @@ class ComentarioController extends Controller
     public function actualizar(ActualizarComentarioRequest $request, Comentario $comentario): JsonResponse
     {
         try {
-            $comentario->updated($request->validated());
+            $comentario->update($request->validated());
         } catch (\Throwable $th) {
             return response()->json($th->getMessage(), 400);
         }

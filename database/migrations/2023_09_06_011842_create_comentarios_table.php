@@ -15,6 +15,7 @@ class CreateComentariosTable extends Migration
     {
         Schema::create('comentarios', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users');
             $table->foreignId('producto_id')->constrained('productos');
             $table->text('texto');
             $table->boolean('estado')->default(true);
