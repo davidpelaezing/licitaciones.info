@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ActualizarProductoRequest;
 use App\Http\Requests\CrearProductoRequest;
 use App\Models\Producto;
+use App\Traits\ImagenTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ProductoController extends Controller
 {
+    use ImagenTrait;
+
     /**
      * Lista todas los productos
      * @param Request $request
@@ -34,11 +37,18 @@ class ProductoController extends Controller
      */
     public function crear(CrearProductoRequest $request): JsonResponse
     {
-        $data = $request->except('tags');
+        $data = $request->except('tags', 'imagen');
         try {
             $producto = Producto::create($data);
+
             // sincronizamos los tags con el producto
             $producto->tags()->sync($request->tags);
+
+            // si se ha enviado una imagen la almacenamos y guardamos la ruta
+            if ($request->hasFile('imagen')) {
+                $ruta = $this->subirImagen('productos', $request->file('imagen'));
+                $producto->actualizarImagen($ruta);
+            }
         } catch (\Throwable $th) {
             return response()->json($th->getMessage(), 400);
         }
@@ -54,11 +64,23 @@ class ProductoController extends Controller
      */
     public function actualizar(ActualizarProductoRequest $request, Producto $producto): JsonResponse
     {
-        $data = $request->except('tags');
+        $data = $request->except('tags', 'imagen');
         try {
-            $producto->updated($data);
+            $producto->update($data);
+
             // sincronizamos los tags con el producto
             $producto->tags()->sync($request->tags);
+
+            // si se ha enviado una imagen la almacenamos y guardamos la ruta, no sin antes eliminar la enterior si es que la tiene
+            if ($request->hasFile('imagen')) {
+
+                if ($producto->imagen_url) {
+                    $this->eliminarImagen($producto->imagen_url);
+                }
+
+                $ruta = $this->subirImagen('productos', $request->file('imagen'));
+                $producto->actualizarImagen($ruta);
+            }
         } catch (\Throwable $th) {
             return response()->json($th->getMessage(), 400);
         }

@@ -30,7 +30,7 @@ class CrearProductoRequest extends FormRequest
             'nombre' => 'required|string|max:255',
             'descripcion' => 'required|string',
             'precio' => 'required|numeric',
-            'imagen_url' => 'nullable|file',
+            'imagen' => 'nullable|file',
             'tags' => 'nullable|array',
             'tags.*' => 'exists:tags,id'
         ];

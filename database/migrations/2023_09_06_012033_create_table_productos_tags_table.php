@@ -13,7 +13,7 @@ class CreateTableProductosTagsTable extends Migration
      */
     public function up()
     {
-        Schema::create('table_productos_tags', function (Blueprint $table) {
+        Schema::create('producto_tag', function (Blueprint $table) {
             $table->foreignId('tag_id')->constrained('tags');
             $table->foreignId('producto_id')->constrained('productos');
         });
@@ -26,6 +26,6 @@ class CreateTableProductosTagsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('table_productos_tags');
+        Schema::dropIfExists('producto_tag');
     }
 }

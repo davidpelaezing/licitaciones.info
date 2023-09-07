@@ -35,4 +35,15 @@ class Producto extends Model
             'estado' => !$this->estado
         ]);
     }
+
+    /**
+     * Actualiza la url de la imagen
+     * @return boolean
+     */
+    public function actualizarImagen($ruta): bool
+    {
+        return $this->update([
+            'imagen_url' => $ruta
+        ]);
+    }
 }
