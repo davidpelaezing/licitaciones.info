@@ -13,7 +13,7 @@ class CreateDetalleOrdensTable extends Migration
      */
     public function up()
     {
-        Schema::create('detalle_ordens', function (Blueprint $table) {
+        Schema::create('detalle_ordenes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('orden_id')->constrained('ordenes');
             $table->foreignId('producto_id')->constrained('productos');
