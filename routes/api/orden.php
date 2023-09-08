@@ -14,6 +14,6 @@ Route::prefix('orden')->middleware('auth:sanctum')->group(function () {
     Route::controller(DetalleOrdenController::class)->group(function () {
         Route::post('/agregar-producto', 'crear');
         Route::put('/actualizar-producto/{detalle}', 'actualizar');
-        Route::delete('/eliminar-producto/{detalle}', 'actualizar');
+        Route::delete('/eliminar-producto/{detalle}', 'eliminar');
     });
 });

@@ -88,12 +88,12 @@ class DetalleOrdenController extends Controller
     private function validar($detalle): void
     {
         // Validamos que el detalle le pertenezca al usuario
-        if (!$detalle->mePertenece() && $detalle->orden->isActivo()) {
+        if (!$detalle->orden->mePertenece()) {
             throw new Error('Inautorizado.', 401);
         }
 
         // Validamos que la orden este activa
-        if ($detalle->orden->isActivo()) {
+        if (!$detalle->orden->isActivo()) {
             throw new Error('Orden inactiva', 422);
         }
     }
