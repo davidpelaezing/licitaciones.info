@@ -2,84 +2,87 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CrearFacturaRequest;
+use App\Models\DetalleFactura;
 use App\Models\Factura;
+use App\Models\Orden;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class FacturaController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Lista todas las facturas
+     * @param Request $request
+     * @return JsonResponse
+     * @author David Peláez
      */
-    public function index()
+    public function listar(Request $request): JsonResponse
     {
-        //
+        try {
+            $facturas = Factura::all();
+        } catch (\Throwable $th) {
+            return response()->json($th->getMessage(), 400);
+        }
+        return response()->json($facturas);
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Almacena una factura
+     * @param Request $request
+     * @return JsonResponse
+     * @author David Peláez
      */
-    public function create()
+    public function crear(CrearFacturaRequest $request): JsonResponse
     {
-        //
+        try {
+            DB::beginTransaction();
+            // recuperamos la orden
+            $orden = Orden::where('user_id', Auth::id())
+                ->where('estado_id', 1)
+                ->firstOrFail();
+
+            // preparamos la data para la factura
+            $data = $request->validated();
+            $data['user_id'] = $orden->user_id;
+            $data['orden_id'] = $orden->orden_id;
+
+            DB::beginTransaction();
+            // creamos la factura
+            $factura = Factura::create($data);
+
+            //creamos los detalles de la factura
+            foreach ($orden->detalles as $detalle) {
+                DetalleFactura::create([
+                    'factura_id' => $factura->id,
+                    'producto_id' => $detalle->producto_id,
+                    'cantidad' => $detalle->cantidad,
+                    'precio_unitario' => $detalle->producto->precio,
+                    'total' => $detalle->cantidad * $detalle->producto->precio,
+                ]);
+            }
+
+            // cambiamos el estado de la orden
+            $orden->cambiarEstado(2);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json($th->getMessage(), 400);
+        }
+        DB::commit();
+        return response()->json($factura, 201);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * muestra una factura
+     * @param Request $request
+     * @param Factura $factura
+     * @return JsonResponse
+     * @author David Peláez
      */
-    public function store(Request $request)
+    public function consultar(Request $request, Factura $factura): JsonResponse
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Factura  $factura
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Factura $factura)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Factura  $factura
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Factura $factura)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Factura  $factura
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Factura $factura)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Factura  $factura
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Factura $factura)
-    {
-        //
+        return response()->json($factura);
     }
 }

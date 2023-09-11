@@ -32,9 +32,10 @@ class Orden extends Model
     /* Funciones */
 
     /**
-     * Cambia el estado
+     * Cambia el estado de la orden
      * @param int $estado_id
      * @return boolean
+     * @author David Peláez
      */
     public function cambiarEstado($estado_id): bool
     {
