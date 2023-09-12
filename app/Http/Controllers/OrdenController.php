@@ -7,6 +7,7 @@ use App\Models\Orden;
 use Error;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrdenController extends Controller
 {
@@ -39,6 +40,27 @@ class OrdenController extends Controller
             $this->validar($orden);
         } catch (\Throwable $th) {
             return response()->json($th->getMessage(), $th->getCode());
+        }
+        return response()->json($orden);
+    }
+
+    /**
+     * devuelve la orden activa del usuario orden activa
+     * @param Request $request
+     * @return JsonResponse
+     * @author David Peláez
+     */
+    public function miOrden(Request $request): JsonResponse
+    {
+        try {
+            $orden = Orden::where('user_id', Auth::id())
+                ->where('estado_id', 1)
+                ->with(['detalles' => function ($query) {
+                    return $query->with('producto');
+                }])
+                ->first();
+        } catch (\Throwable $th) {
+            return response()->json($th->getMessage(), 400);
         }
         return response()->json($orden);
     }

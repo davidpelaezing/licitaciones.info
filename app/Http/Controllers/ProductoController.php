@@ -22,8 +22,9 @@ class ProductoController extends Controller
     public function listar(Request $request): JsonResponse
     {
         try {
-            $productos = Producto::with('categoria');
-            $data = $request->page ? $productos->paginate($request->page) : $productos->get();
+            $productos = Producto::with('categoria', 'tags:id,nombre')
+                ->whereCategoria($request->categoria_id);
+            $data = $request->page ? $productos->paginate(10) : $productos->get();
             return response()->json($data);
         } catch (\Throwable $th) {
             return response()->json($th->getMessage(), 400);
@@ -95,8 +96,19 @@ class ProductoController extends Controller
      * @return JsonResponse
      * @author David Peláez
      */
-    public function consultar(Request $request, Producto $producto): JsonResponse
+    public function consultar(Request $request, $id): JsonResponse
     {
+        $producto = Producto::where('id', $id)
+            ->with(
+                [
+                    'categoria',
+                    'tags',
+                    'comentarios' => function ($query) {
+                        $query->with('user')->latest()->limit(5); // Obtener los últimos 5 comentarios
+                    }
+                ]
+            )
+            ->first();
         return response()->json($producto);
     }
 

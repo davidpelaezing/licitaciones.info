@@ -9,6 +9,7 @@ Route::prefix('orden')->middleware('auth:sanctum')->group(function () {
         Route::get('/', 'listar');
         Route::put('/cambiar-estado/{orden}', 'cambiarEstado');
         Route::get('/consultar/{orden}', 'consultar');
+        Route::get('/mi-orden', 'miOrden');
     });
 
     Route::controller(DetalleOrdenController::class)->group(function () {

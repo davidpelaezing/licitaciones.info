@@ -10,12 +10,20 @@ class Comentario extends Model
     use HasFactory;
 
     protected $guarded = [];
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d',
+    ];
 
     /* Relaciones */
 
     public function producto()
     {
         return $this->belongsTo(Producto::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     /* Funciones */

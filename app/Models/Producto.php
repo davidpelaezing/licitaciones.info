@@ -24,6 +24,11 @@ class Producto extends Model
         return $this->belongsToMany(Tag::class);
     }
 
+    public function comentarios()
+    {
+        return $this->hasMany(Comentario::class);
+    }
+
     /* Funciones */
 
     /**
@@ -46,5 +51,12 @@ class Producto extends Model
         return $this->update([
             'imagen_url' => $ruta
         ]);
+    }
+
+    public function scopeWhereCategoria($query, $categoria_id)
+    {
+        if ($categoria_id) {
+            return $query->where('categoria_id', $categoria_id);
+        }
     }
 }
