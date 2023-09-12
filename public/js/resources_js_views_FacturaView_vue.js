@@ -162,6 +162,39 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee2, null, [[0, 7]]);
       }))();
     },
+    cancelar: function cancelar() {
+      var _this3 = this;
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+          while (1) switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.prev = 0;
+              if (confirm("seguro que desea cancelar la orden ?")) {
+                _context3.next = 3;
+                break;
+              }
+              return _context3.abrupt("return", false);
+            case 3:
+              _context3.next = 5;
+              return _this3.axios.put('/orden/cambiar-estado/' + _this3.orden.id, {
+                "estado_id": 3
+              });
+            case 5:
+              _this3.limpiar();
+              _this3.$router.push("/");
+              _context3.next = 12;
+              break;
+            case 9:
+              _context3.prev = 9;
+              _context3.t0 = _context3["catch"](0);
+              console.error(_context3.t0.response);
+            case 12:
+            case "end":
+              return _context3.stop();
+          }
+        }, _callee3, null, [[0, 9]]);
+      }))();
+    },
     limpiar: function limpiar() {
       this.form.nombre_completo = null;
       this.form.documento = null;
@@ -489,7 +522,27 @@ var render = function () {
             }),
           ]),
           _vm._v(" "),
-          _vm._m(1),
+          _c("div", { staticClass: "btn-group" }, [
+            _c(
+              "button",
+              { staticClass: "btn btn-success", attrs: { type: "submit" } },
+              [_vm._v("Finalizar")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-danger",
+                attrs: { type: "button" },
+                on: {
+                  click: function ($event) {
+                    return _vm.cancelar()
+                  },
+                },
+              },
+              [_vm._v("Cancelar")]
+            ),
+          ]),
         ]
       ),
     ]),
@@ -512,24 +565,6 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("total")]),
       ]),
-    ])
-  },
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "btn-group" }, [
-      _c(
-        "button",
-        { staticClass: "btn btn-success", attrs: { type: "submit" } },
-        [_vm._v("Finalizar")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "btn btn-danger", attrs: { type: "button" } },
-        [_vm._v("Cancelar")]
-      ),
     ])
   },
 ]

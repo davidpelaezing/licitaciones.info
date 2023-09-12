@@ -55,7 +55,7 @@
 
             <div class="btn-group">
                 <button type="submit" class="btn btn-success">Finalizar</button>
-                <button type="button" class="btn btn-danger">Cancelar</button>
+                <button type="button" class="btn btn-danger" @click="cancelar()">Cancelar</button>
             </div>
         </form>
 
@@ -114,6 +114,21 @@ export default {
                 this.orden = response.data
             }catch (error) {
                 console.log(error.response)
+            }
+        },
+
+        async cancelar(){
+            try {
+                if(!confirm("seguro que desea cancelar la orden ?")){
+                    return false;
+                }
+                await this.axios.put('/orden/cambiar-estado/' + this.orden.id, {
+                    "estado_id": 3
+                });
+                this.limpiar();
+                this.$router.push("/")
+            } catch (error) {
+                console.error(error.response)
             }
         },
 
