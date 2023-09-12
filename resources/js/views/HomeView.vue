@@ -5,7 +5,12 @@
 
             <select class="form-select mb-3" v-model="filtro.categoria_id" aria-label="Default select example" @change="getProductos()">
                 <option selected :value="null">Filtra por una categoria</option>
-                <option v-for="categoria in categorias" :value="categoria.id">{{ categoria.nombre }}</option>
+                <option v-for="categoria in categorias" :value="categoria.id">{{ categoria.nombre }} ({{ categoria.productos_count }})</option>
+            </select>
+
+            <select class="form-select mb-3" v-model="filtro.orden" aria-label="Default select example" @change="getProductos()">
+                <option selected value="desc">Decendente</option>
+                <option selected value="asc">Asendente</option>
             </select>
 
             <div class="row mb-4">
@@ -52,7 +57,8 @@ export default {
                 last_page: 1
             },
             filtro: {
-                categoria_id: null
+                categoria_id: null,
+                orden: "desc"
             }
         }
     },
@@ -75,7 +81,7 @@ export default {
 
                 const categoria = this.filtro.categoria_id ? this.filtro.categoria_id : '';
 
-                const response = await this.axios.get('/producto?page=' + page + '&categoria_id=' + categoria)
+                const response = await this.axios.get('/producto?page=' + page + '&categoria_id=' + categoria + '&order=' + this.filtro.orden)
                 this.paginacion.current_page = response.data.current_page
                 this.paginacion.last_page = response.data.last_page
                 this.productos = response.data.data

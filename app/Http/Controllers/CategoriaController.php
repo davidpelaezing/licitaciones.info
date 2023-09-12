@@ -19,7 +19,7 @@ class CategoriaController extends Controller
     public function listar(Request $request): JsonResponse
     {
         try {
-            $categorias = Categoria::all();
+            $categorias = Categoria::withCount('productos')->get();
         } catch (\Throwable $th) {
             return response()->json($th->getMessage(), 400);
         }

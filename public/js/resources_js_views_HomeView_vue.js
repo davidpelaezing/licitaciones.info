@@ -3179,6 +3179,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -3197,7 +3202,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         last_page: 1
       },
       filtro: {
-        categoria_id: null
+        categoria_id: null,
+        orden: "desc"
       }
     };
   },
@@ -3225,7 +3231,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             case 4:
               categoria = _this.filtro.categoria_id ? _this.filtro.categoria_id : '';
               _context.next = 7;
-              return _this.axios.get('/producto?page=' + page + '&categoria_id=' + categoria);
+              return _this.axios.get('/producto?page=' + page + '&categoria_id=' + categoria + '&order=' + _this.filtro.orden);
             case 7:
               response = _context.sent;
               _this.paginacion.current_page = response.data.current_page;
@@ -8322,11 +8328,63 @@ var render = function () {
           _vm._v(" "),
           _vm._l(_vm.categorias, function (categoria) {
             return _c("option", { domProps: { value: categoria.id } }, [
-              _vm._v(_vm._s(categoria.nombre)),
+              _vm._v(
+                _vm._s(categoria.nombre) +
+                  " (" +
+                  _vm._s(categoria.productos_count) +
+                  ")"
+              ),
             ])
           }),
         ],
         2
+      ),
+      _vm._v(" "),
+      _c(
+        "select",
+        {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.filtro.orden,
+              expression: "filtro.orden",
+            },
+          ],
+          staticClass: "form-select mb-3",
+          attrs: { "aria-label": "Default select example" },
+          on: {
+            change: [
+              function ($event) {
+                var $$selectedVal = Array.prototype.filter
+                  .call($event.target.options, function (o) {
+                    return o.selected
+                  })
+                  .map(function (o) {
+                    var val = "_value" in o ? o._value : o.value
+                    return val
+                  })
+                _vm.$set(
+                  _vm.filtro,
+                  "orden",
+                  $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+                )
+              },
+              function ($event) {
+                return _vm.getProductos()
+              },
+            ],
+          },
+        },
+        [
+          _c("option", { attrs: { selected: "", value: "desc" } }, [
+            _vm._v("Decendente"),
+          ]),
+          _vm._v(" "),
+          _c("option", { attrs: { selected: "", value: "asc" } }, [
+            _vm._v("Asendente"),
+          ]),
+        ]
       ),
       _vm._v(" "),
       _c(

@@ -59,4 +59,11 @@ class Producto extends Model
             return $query->where('categoria_id', $categoria_id);
         }
     }
+
+    public function scopeOrderPrecio($query, $order)
+    {
+        if ($order) {
+            return $query->orderBy('precio', $order);
+        }
+    }
 }

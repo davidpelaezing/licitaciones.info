@@ -23,7 +23,8 @@ class ProductoController extends Controller
     {
         try {
             $productos = Producto::with('categoria', 'tags:id,nombre')
-                ->whereCategoria($request->categoria_id);
+                ->whereCategoria($request->categoria_id)
+                ->orderPrecio($request->order);
             $data = $request->page ? $productos->paginate(10) : $productos->get();
             return response()->json($data);
         } catch (\Throwable $th) {
