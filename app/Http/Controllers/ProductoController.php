@@ -22,11 +22,12 @@ class ProductoController extends Controller
     public function listar(Request $request): JsonResponse
     {
         try {
-            $productos = Producto::all();
+            $productos = Producto::with('categoria');
+            $data = $request->page ? $productos->paginate($request->page) : $productos->get();
+            return response()->json($data);
         } catch (\Throwable $th) {
             return response()->json($th->getMessage(), 400);
         }
-        return response()->json($productos);
     }
 
     /**
@@ -49,10 +50,10 @@ class ProductoController extends Controller
                 $ruta = $this->subirImagen('productos', $request->file('imagen'));
                 $producto->actualizarImagen($ruta);
             }
+            return response()->json($producto, 201);
         } catch (\Throwable $th) {
             return response()->json($th->getMessage(), 400);
         }
-        return response()->json($producto, 201);
     }
 
     /**
@@ -81,10 +82,10 @@ class ProductoController extends Controller
                 $ruta = $this->subirImagen('productos', $request->file('imagen'));
                 $producto->actualizarImagen($ruta);
             }
+            return response()->json($producto);
         } catch (\Throwable $th) {
             return response()->json($th->getMessage(), 400);
         }
-        return response()->json($producto);
     }
 
     /**
@@ -110,9 +111,9 @@ class ProductoController extends Controller
     {
         try {
             $producto->cambiarEstado();
+            return response()->json($producto);
         } catch (\Throwable $th) {
             return response()->json($th->getMessage(), 400);
         }
-        return response()->json($producto);
     }
 }

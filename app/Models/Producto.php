@@ -10,6 +10,7 @@ class Producto extends Model
     use HasFactory;
 
     protected $guarded = [];
+    protected $table = 'productos';
 
     /* Relaciones */
 

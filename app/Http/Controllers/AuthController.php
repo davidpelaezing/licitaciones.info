@@ -25,16 +25,12 @@ class AuthController extends Controller
                 'email' => $request->email,
                 'password' => $request->password
             ]);
-            // Generamos un token de autenticacion
-            $token = $usuario->createToken('auth_token')->plainTextToken;
         } catch (\Throwable $th) {
             return response()->json($th->getMessage(), 400);
         }
 
         return response()->json([
             'data' => $usuario,
-            'access_token' => $token,
-            'type_token' => 'Bearer'
         ], 201);
     }
 
@@ -68,7 +64,8 @@ class AuthController extends Controller
         return response()->json([
             'data' => $usuario,
             'access_token' => $token,
-            'type_token' => 'Bearer'
+            'type_token' => 'Bearer',
+            'csrf_token' => csrf_token()
         ]);
     }
 
