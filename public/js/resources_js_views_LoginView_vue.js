@@ -53,18 +53,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             case 3:
               registro_response = _context.sent;
               localStorage.setItem("token", registro_response.data.access_token);
+              localStorage.setItem("admin", JSON.stringify(registro_response.data.data));
               _this.$router.push("/");
-              _context.next = 11;
+              _context.next = 12;
               break;
-            case 8:
-              _context.prev = 8;
+            case 9:
+              _context.prev = 9;
               _context.t0 = _context["catch"](0);
               console.log(_context.t0);
-            case 11:
+            case 12:
             case "end":
               return _context.stop();
           }
-        }, _callee, null, [[0, 8]]);
+        }, _callee, null, [[0, 9]]);
       }))();
     }
   }

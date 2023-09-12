@@ -39,12 +39,6 @@
 
 export default {
 
-    data(){
-        return {
-            msg: "Estamos On fire"
-        }
-    }
-
 }
 
 </script>

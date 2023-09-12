@@ -38,6 +38,7 @@ class FacturaController extends Controller
     public function crear(CrearFacturaRequest $request): JsonResponse
     {
         try {
+            // Iniciamos transaccion (Por que habra varias insersiones )
             DB::beginTransaction();
             // recuperamos la orden
             $orden = Orden::where('user_id', Auth::id())

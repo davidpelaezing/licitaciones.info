@@ -60,7 +60,6 @@
 <script>
 import FormProductoComponent from './FormProductoComponent';
 import { Modal } from 'bootstrap'
-import toastr from "toastr"
 export default {
     components: {
         FormProductoComponent
