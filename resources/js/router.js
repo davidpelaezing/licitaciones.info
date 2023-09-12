@@ -14,7 +14,15 @@ const routes = [
   },
   {
     path: '/productos',
-    component: () => import('./views/ProductoView.vue')
+    component: () => import('./views/ProductoView.vue'),
+    beforeEnter: (to, from, next) => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        next()
+      }else{
+        next('/login')
+      }
+    }
   },
   {
     path: '/producto-detalle/:id',
@@ -22,7 +30,15 @@ const routes = [
   },
   {
     path: '/finalizar-compra',
-    component: () => import('./views/FacturaView.vue')
+    component: () => import('./views/FacturaView.vue'),
+    beforeEnter: (to, from, next) => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        next()
+      }else{
+        next('/login')
+      }
+    }
   },
   {
     path: '/',
@@ -30,15 +46,39 @@ const routes = [
   },
   {
     path: '/categorias',
-    component: () => import('./views/CategoriaView.vue')
+    component: () => import('./views/CategoriaView.vue'),
+    beforeEnter: (to, from, next) => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        next()
+      }else{
+        next('/login')
+      }
+    }
   },
   {
     path: '/tags',
-    component: () => import('./views/TagView.vue')
+    component: () => import('./views/TagView.vue'),
+    beforeEnter: (to, from, next) => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        next()
+      }else{
+        next('/login')
+      }
+    }
   },
   {
     path: '/usuarios',
-    component: () => import('./views/UsuarioView.vue')
+    component: () => import('./views/UsuarioView.vue'),
+    beforeEnter: (to, from, next) => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        next()
+      }else{
+        next('/login')
+      }
+    }
   },
 ]
 

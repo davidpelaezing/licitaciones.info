@@ -2188,6 +2188,14 @@ var routes = [{
   path: '/productos',
   component: function component() {
     return __webpack_require__.e(/*! import() */ "resources_js_views_ProductoView_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./views/ProductoView.vue */ "./resources/js/views/ProductoView.vue"));
+  },
+  beforeEnter: function beforeEnter(to, from, next) {
+    var token = localStorage.getItem('token');
+    if (token) {
+      next();
+    } else {
+      next('/login');
+    }
   }
 }, {
   path: '/producto-detalle/:id',
@@ -2198,6 +2206,14 @@ var routes = [{
   path: '/finalizar-compra',
   component: function component() {
     return __webpack_require__.e(/*! import() */ "resources_js_views_FacturaView_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./views/FacturaView.vue */ "./resources/js/views/FacturaView.vue"));
+  },
+  beforeEnter: function beforeEnter(to, from, next) {
+    var token = localStorage.getItem('token');
+    if (token) {
+      next();
+    } else {
+      next('/login');
+    }
   }
 }, {
   path: '/',
@@ -2208,16 +2224,40 @@ var routes = [{
   path: '/categorias',
   component: function component() {
     return __webpack_require__.e(/*! import() */ "resources_js_views_CategoriaView_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./views/CategoriaView.vue */ "./resources/js/views/CategoriaView.vue"));
+  },
+  beforeEnter: function beforeEnter(to, from, next) {
+    var token = localStorage.getItem('token');
+    if (token) {
+      next();
+    } else {
+      next('/login');
+    }
   }
 }, {
   path: '/tags',
   component: function component() {
     return __webpack_require__.e(/*! import() */ "resources_js_views_TagView_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./views/TagView.vue */ "./resources/js/views/TagView.vue"));
+  },
+  beforeEnter: function beforeEnter(to, from, next) {
+    var token = localStorage.getItem('token');
+    if (token) {
+      next();
+    } else {
+      next('/login');
+    }
   }
 }, {
   path: '/usuarios',
   component: function component() {
     return __webpack_require__.e(/*! import() */ "resources_js_views_UsuarioView_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./views/UsuarioView.vue */ "./resources/js/views/UsuarioView.vue"));
+  },
+  beforeEnter: function beforeEnter(to, from, next) {
+    var token = localStorage.getItem('token');
+    if (token) {
+      next();
+    } else {
+      next('/login');
+    }
   }
 }];
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({

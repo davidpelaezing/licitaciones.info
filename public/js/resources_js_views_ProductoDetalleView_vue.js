@@ -81,7 +81,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             case 9:
               _context.prev = 9;
               _context.t0 = _context["catch"](0);
-              console.log(_context.t0);
+              if (_context.t0.response.status === 401) {
+                _this.$router.push('/login');
+              }
             case 12:
             case "end":
               return _context.stop();
@@ -167,7 +169,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             case 8:
               _context.prev = 8;
               _context.t0 = _context["catch"](0);
-              console.log(_context.t0);
+              if (_context.t0.response.status === 401) {
+                _this.$router.push('/login');
+              }
             case 11:
             case "end":
               return _context.stop();

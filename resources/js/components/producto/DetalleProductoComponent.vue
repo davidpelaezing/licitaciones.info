@@ -47,7 +47,9 @@ export default {
                 this.limpiar()
                 this.$router.push('/')
             }catch(error){
-                console.log(error)
+                if(error.response.status === 401){
+                    this.$router.push('/login')
+                }
             }
         },
 
