@@ -3097,42 +3097,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -3148,14 +3112,6 @@ __webpack_require__.r(__webpack_exports__);
       }
     }
   },
-  data: function data() {
-    return {
-      modal: 'pito'
-    };
-  },
-  mounted: function mounted() {
-    this.modal = new bootstrap__WEBPACK_IMPORTED_MODULE_1__.Modal(this.$refs.facturaModal);
-  },
   computed: {
     total: function total() {
       return this.orden.detalles.reduce(function (acum, current) {
@@ -3165,7 +3121,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     pagar: function pagar() {
-      this.modal.show();
+      this.$router.push('/finalizar-compra');
     }
   }
 });
@@ -8292,106 +8248,12 @@ var render = function () {
             },
           },
         },
-        [_vm._v("Realizar Compra")]
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          ref: "facturaModal",
-          staticClass: "modal fade",
-          attrs: {
-            id: "facturaModal",
-            tabindex: "-1",
-            "aria-labelledby": "facturaModalLabel",
-            "aria-hidden": "true",
-          },
-        },
-        [
-          _c("div", { staticClass: "modal-dialog" }, [
-            _c("div", { staticClass: "modal-content" }, [
-              _vm._m(0),
-              _vm._v(" "),
-              _c("div", { staticClass: "modal-body" }, [
-                _c("table", { staticClass: "table table-striped mb-2" }, [
-                  _vm._m(1),
-                  _vm._v(" "),
-                  _c(
-                    "tbody",
-                    _vm._l(_vm.orden.detalles, function (detalle) {
-                      return _c("tr", [
-                        _c("th", { attrs: { scope: "row" } }, [
-                          _vm._v(_vm._s(detalle.producto.id)),
-                        ]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(detalle.producto.nombre))]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _vm._v("$" + _vm._s(detalle.producto.precio)),
-                        ]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(detalle.cantidad))]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _vm._v(
-                            "$" +
-                              _vm._s(detalle.cantidad * detalle.producto.precio)
-                          ),
-                        ]),
-                      ])
-                    }),
-                    0
-                  ),
-                ]),
-              ]),
-            ]),
-          ]),
-        ]
+        [_vm._v("Pagar")]
       ),
     ]),
   ])
 }
-var staticRenderFns = [
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-header" }, [
-      _c(
-        "h1",
-        { staticClass: "modal-title fs-5", attrs: { id: "facturaModalLabel" } },
-        [_vm._v("Pagando factura")]
-      ),
-      _vm._v(" "),
-      _c("button", {
-        staticClass: "btn-close",
-        attrs: {
-          type: "button",
-          "data-bs-dismiss": "modal",
-          "aria-label": "Close",
-        },
-      }),
-    ])
-  },
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("#")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("producto")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("precio_unitario")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("cantidad")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("total")]),
-      ]),
-    ])
-  },
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

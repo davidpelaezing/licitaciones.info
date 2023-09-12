@@ -48,9 +48,8 @@ class FacturaController extends Controller
             // preparamos la data para la factura
             $data = $request->validated();
             $data['user_id'] = $orden->user_id;
-            $data['orden_id'] = $orden->orden_id;
+            $data['orden_id'] = $orden->id;
 
-            DB::beginTransaction();
             // creamos la factura
             $factura = Factura::create($data);
 

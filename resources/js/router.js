@@ -21,6 +21,10 @@ const routes = [
     component: () => import('./views/ProductoDetalleView.vue')
   },
   {
+    path: '/finalizar-compra',
+    component: () => import('./views/FacturaView.vue')
+  },
+  {
     path: '/',
     component: () => import('./views/HomeView.vue')
   },
