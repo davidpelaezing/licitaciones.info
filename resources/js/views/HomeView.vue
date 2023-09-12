@@ -34,6 +34,7 @@
             <h2>Mi carrito</h2>
             <CarroProductoComponent 
                 :orden="orden"
+                @submit="miOrden()"
             />
         </div>
     </div>

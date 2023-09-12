@@ -7,8 +7,10 @@
                 <div class="ms-2 me-auto">
                 <div class="fw-bold">{{ detalle.producto.nombre }}</div>
                     {{ detalle.cantidad }} unidades
+                    <span class="badge bg-primary rounded-pill">${{ detalle.cantidad * detalle.producto.precio }}</span>
                 </div>
-                <span class="badge bg-primary rounded-pill">${{ detalle.cantidad * detalle.producto.precio }}</span>
+                
+                <button class="btn btn-sm btn-danger" @click.prevent="eliminar(detalle)">x</button>
             </li>
         </ol>
 
@@ -22,7 +24,6 @@
 </template>
 <script>
 import FormFacturaComponent from '../factura/FormFacturaComponent.vue';
-import { Modal } from 'bootstrap'
 export default {
     components: { FormFacturaComponent },
 
@@ -44,6 +45,15 @@ export default {
     },
 
     methods: {
+
+        async eliminar(detalle){
+            try {
+                await this.axios.delete('/orden/eliminar-producto/' + detalle.id)
+                this.$emit('submit');
+            }catch(error){
+                console.log(error)
+            }
+        },
 
         pagar(){
             this.$router.push('/finalizar-compra')
