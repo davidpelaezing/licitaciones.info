@@ -2114,6 +2114,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   methods: {
@@ -2337,6 +2340,20 @@ var routes = [{
   path: '/categorias',
   component: function component() {
     return __webpack_require__.e(/*! import() */ "resources_js_views_CategoriaView_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./views/CategoriaView.vue */ "./resources/js/views/CategoriaView.vue"));
+  },
+  beforeEnter: function beforeEnter(to, from, next) {
+    var usuario = JSON.parse(localStorage.getItem('user'));
+    var token = localStorage.getItem('token');
+    if (token && usuario.admin) {
+      next();
+    } else {
+      next('/');
+    }
+  }
+}, {
+  path: '/comentarios',
+  component: function component() {
+    return __webpack_require__.e(/*! import() */ "resources_js_views_ComentarioView_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./views/ComentarioView.vue */ "./resources/js/views/ComentarioView.vue"));
   },
   beforeEnter: function beforeEnter(to, from, next) {
     var usuario = JSON.parse(localStorage.getItem('user'));
@@ -3826,6 +3843,24 @@ var render = function () {
                             attrs: { to: "/categorias" },
                           },
                           [_vm._v("Categorias")]
+                        ),
+                      ],
+                      1
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.getToken() && _vm.isAdmin()
+                  ? _c(
+                      "li",
+                      { staticClass: "nav-item" },
+                      [
+                        _c(
+                          "router-link",
+                          {
+                            staticClass: "nav-link active",
+                            attrs: { to: "/comentarios" },
+                          },
+                          [_vm._v("Comentarios")]
                         ),
                       ],
                       1
@@ -20646,7 +20681,7 @@ module.exports = JSON.parse('{"name":"axios","version":"0.21.4","description":"P
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames not based on template
-/******/ 			if ({"resources_js_views_LoginView_vue":1,"resources_js_views_RegistroView_vue":1,"resources_js_views_ProductoView_vue":1,"resources_js_views_ProductoDetalleView_vue":1,"resources_js_views_FinalizarView_vue":1,"resources_js_views_FacturaView_vue":1,"resources_js_views_HomeView_vue":1,"resources_js_views_CategoriaView_vue":1,"resources_js_views_TagView_vue":1,"resources_js_views_UsuarioView_vue":1}[chunkId]) return "js/" + chunkId + ".js";
+/******/ 			if ({"resources_js_views_LoginView_vue":1,"resources_js_views_RegistroView_vue":1,"resources_js_views_ProductoView_vue":1,"resources_js_views_ProductoDetalleView_vue":1,"resources_js_views_FinalizarView_vue":1,"resources_js_views_FacturaView_vue":1,"resources_js_views_HomeView_vue":1,"resources_js_views_CategoriaView_vue":1,"resources_js_views_ComentarioView_vue":1,"resources_js_views_TagView_vue":1,"resources_js_views_UsuarioView_vue":1}[chunkId]) return "js/" + chunkId + ".js";
 /******/ 			// return url for filenames based on template
 /******/ 			return undefined;
 /******/ 		};

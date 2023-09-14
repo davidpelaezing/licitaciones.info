@@ -15,6 +15,9 @@
                         <router-link to="/categorias" class="nav-link active">Categorias</router-link>
                     </li>
                     <li class="nav-item" v-if="getToken() && isAdmin()">
+                        <router-link to="/comentarios" class="nav-link active">Comentarios</router-link>
+                    </li>
+                    <li class="nav-item" v-if="getToken() && isAdmin()">
                         <router-link to="/tags" class="nav-link active">Tags</router-link>
                     </li>
                     <li class="nav-item" v-if="getToken() && isAdmin()">

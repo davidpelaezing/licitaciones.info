@@ -22,11 +22,12 @@ class ComentarioController extends Controller
     public function listar(Request $request): JsonResponse
     {
         try {
-            $comentarios = Comentario::all();
+            $comentarios = Comentario::with('producto', 'user');
+            $data = $request->page ? $comentarios->paginate(10) : $comentarios->get();
         } catch (\Throwable $th) {
             return response()->json($th->getMessage(), 400);
         }
-        return response()->json($comentarios);
+        return response()->json($data);
     }
 
     /**

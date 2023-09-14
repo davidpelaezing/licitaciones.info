@@ -26,6 +26,7 @@ class ActualizarComentarioRequest extends FormRequest
     public function rules()
     {
         return [
+            'producto_id' => 'required|exists:productos,id',
             'texto' => 'required|string'
         ];
     }

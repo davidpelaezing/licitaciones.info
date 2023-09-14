@@ -103,6 +103,19 @@ const routes = [
     }
   },
   {
+    path: '/comentarios',
+    component: () => import('./views/ComentarioView.vue'),
+    beforeEnter: (to, from, next) => {
+      const usuario = JSON.parse(localStorage.getItem('user'));
+      const token = localStorage.getItem('token');
+      if (token && usuario.admin) {
+        next()
+      }else{
+        next('/')
+      }
+    }
+  },
+  {
     path: '/tags',
     component: () => import('./views/TagView.vue'),
     beforeEnter: (to, from, next) => {
