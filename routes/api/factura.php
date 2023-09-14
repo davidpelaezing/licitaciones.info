@@ -7,4 +7,5 @@ Route::controller(FacturaController::class)->prefix('factura')->group(function (
     Route::get('/', 'listar')->middleware('auth:sanctum');
     Route::post('/crear', 'crear')->middleware('auth:sanctum');
     Route::get('/consultar/{factura}', 'consultar')->middleware('auth:sanctum');
+    Route::put('/actualizar/{factura}', 'actualizar')->middleware('auth:sanctum', 'admin');
 });

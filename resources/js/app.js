@@ -39,6 +39,20 @@ const options = {
 Vue.use(VueAxios, axios);
 Vue.use(Snotify, options);
 
+Vue.mixin({
+  methods:{
+
+    isAdmin: function() {
+      const usuario = JSON.parse(localStorage.getItem('user'));
+      return usuario.admin
+    },
+
+    getToken: function() {
+      return localStorage.getItem('token');
+    },
+}
+});
+
 new Vue({
   el: '#app',
   router,

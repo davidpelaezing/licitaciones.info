@@ -19,7 +19,7 @@
             <CarroProductoComponent 
                 :orden="orden"
                 @submit="miOrden()"
-                v-if="orden.detalles.length"
+                v-if="Object.keys(orden).length"
             />
             
         </div>
@@ -72,6 +72,8 @@ export default {
         this.getProductos()
         this.getCategorias()
         this.miOrden()
+        console.log(this.isAdmin())
+        console.log(this.getToken())
     },
 
     methods: {

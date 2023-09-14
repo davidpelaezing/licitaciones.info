@@ -32,7 +32,7 @@ methods: {
         try {
             const registro_response = await this.axios.post("/login", this.form);
             localStorage.setItem("token", registro_response.data.access_token);
-            localStorage.setItem("admin", JSON.stringify(registro_response.data.data));
+            localStorage.setItem("user", JSON.stringify(registro_response.data.data));
             this.$router.push("/")
         }catch (error){
             console.log(error)

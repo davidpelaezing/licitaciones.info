@@ -6,7 +6,7 @@
     </div>
     <div class="card-body">
         
-        <div class="table-responsive" v-if="orden.detalles.length">
+        <div class="table-responsive">
             <table class="table table-striped mb-2">
                 <thead>
                     <tr>
@@ -33,7 +33,7 @@
 
         <h3>Total: ${{ total }}</h3>
 
-        <button class="btn btn-primary" @click="pagar()" v-if="orden.detalles.length">Pagar</button>
+        <button class="btn btn-primary" @click="pagar()">Pagar</button>
 
     </div>
 </div>

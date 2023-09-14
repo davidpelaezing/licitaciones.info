@@ -72,6 +72,9 @@ class DetalleOrdenController extends Controller
         try {
             $this->validar($detalle);
             $detalle->delete();
+            if (!count($detalle->orden->detalles)) {
+                $detalle->orden->cambiarEstado(3);
+            }
         } catch (\Throwable $th) {
             return response()->json($th->getMessage(), $th->getCode());
         }

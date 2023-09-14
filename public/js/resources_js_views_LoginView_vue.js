@@ -53,7 +53,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             case 3:
               registro_response = _context.sent;
               localStorage.setItem("token", registro_response.data.access_token);
-              localStorage.setItem("admin", JSON.stringify(registro_response.data.data));
+              localStorage.setItem("user", JSON.stringify(registro_response.data.data));
               _this.$router.push("/");
               _context.next = 12;
               break;

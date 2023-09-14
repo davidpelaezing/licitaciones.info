@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ActualizarFacturaRequest;
 use App\Http\Requests\CrearFacturaRequest;
 use App\Models\DetalleFactura;
 use App\Models\Factura;
@@ -22,11 +23,26 @@ class FacturaController extends Controller
     public function listar(Request $request): JsonResponse
     {
         try {
-            $facturas = Factura::all();
+            $facturas = Factura::withCount('detalles')->with([
+                'user',
+                'detalles' => function ($query) {
+                    return $query->with('producto');
+                },
+                'orden' => function ($query) {
+                    return $query->with('estado');
+                }
+            ]);
+
+            // si no es un administrador solo puede ver sus facturas
+            if (!Auth::user()->admin) {
+                $facturas->where('user_id', Auth::id());
+            }
+
+            $data = $request->page ? $facturas->paginate(10) : $facturas->get();
         } catch (\Throwable $th) {
             return response()->json($th->getMessage(), 400);
         }
-        return response()->json($facturas);
+        return response()->json($data);
     }
 
     /**
@@ -47,7 +63,7 @@ class FacturaController extends Controller
 
             // preparamos la data para la factura
             $data = $request->validated();
-            $data['user_id'] = $orden->user_id;
+            $data['user_id'] = $request->user_id ? $request->user_id : Auth::id();
             $data['orden_id'] = $orden->id;
 
             // creamos la factura
@@ -63,7 +79,6 @@ class FacturaController extends Controller
                     'total' => $detalle->cantidad * $detalle->producto->precio,
                 ]);
             }
-
             // cambiamos el estado de la orden
             $orden->cambiarEstado(2);
         } catch (\Throwable $th) {
@@ -72,6 +87,22 @@ class FacturaController extends Controller
         }
         DB::commit();
         return response()->json($factura, 201);
+    }
+
+    /**
+     * Actualiza una factura
+     * @param Request $request
+     * @return JsonResponse
+     * @author David Peláez 
+     */
+    public function actualizar(ActualizarFacturaRequest $request, Factura $factura): JsonResponse
+    {
+        try {
+            $factura->update($request->validated());
+        } catch (\Throwable $th) {
+            return response()->json($th->getMessage(), 400);
+        }
+        return response()->json($factura, 200);
     }
 
     /**
