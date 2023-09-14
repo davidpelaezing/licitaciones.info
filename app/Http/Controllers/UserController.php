@@ -19,11 +19,11 @@ class UserController extends Controller
     public function listar(Request $request): JsonResponse
     {
         try {
-            $usuarios = User::all();
+            $data = $request->page ? User::paginate(10) : User::get();
         } catch (\Throwable $th) {
             return response()->json($th->getMessage(), 400);
         }
-        return response()->json($usuarios);
+        return response()->json($data);
     }
 
     /**

@@ -17,10 +17,10 @@
 
         <div class="mb-3">
             <label for="password" class="form-label">Password</label>
-            <input type="text" class="form-control" v-model="form.password" id="paswword" placeholder="password ...">
+            <input type="password" class="form-control" v-model="form.password" id="paswword" placeholder="password ...">
         </div>
 
-        <div class="form-check">
+        <div class="form-check mb-3">
             <input class="form-check-input" v-model="form.admin" type="checkbox" value="" id="admin">
             <label class="form-check-label" for="admin">
                 Admin
@@ -66,7 +66,7 @@ mounted(){
 },
 
 watch: {
-    data_editar(nuevoValor, valorAnterior) {
+    data_editar() {
         this.editar() 
     }
 },
@@ -77,17 +77,20 @@ methods: {
         try {
             if (this.editando){
                 await this.axios.put('/user/actualizar/' + this.data_editar.id, this.form);
-                this.$toastr.success('¡El recurso se actualizo con exito!', '¡Exelente!')
+                this.$snotify.success('¡El recurso se actualizo con exito!', '¡Exelente!')
             }else{
                 await this.axios.post('/user/crear', this.form);
-                this.$toastr.success('¡El recurso se creo con exito!', '¡Exelente!')
+                this.$snotify.success('¡El recurso se creo con exito!', '¡Exelente!')
             }
             this.limpiar()
             this.$emit('submit')
         } catch (error) {
-            this.errores = Object.values(error.response.data).reduce((accumulator, currentArray) => {
-                return accumulator.concat(currentArray);
-            }, []);
+            if(error.response.status === 422){
+                this.errores = Object.values(error.response.data).reduce((accumulator, currentArray) => {
+                    return accumulator.concat(currentArray);
+                }, []);
+            }   
+            this.$snotify.warning('¡Hay errores con la peticion!', '¡Error!')
         }
     },
 

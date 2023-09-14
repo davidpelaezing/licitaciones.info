@@ -3144,6 +3144,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
 
 
 
@@ -8175,6 +8177,8 @@ var render = function () {
                 _vm._v(" "),
                 _c("td", [_vm._v(_vm._s(categoria.nombre))]),
                 _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(categoria.productos_count))]),
+                _vm._v(" "),
                 _c("td", [
                   _vm._v(_vm._s(categoria.estado ? "Activo" : "Inactivo")),
                 ]),
@@ -8237,6 +8241,8 @@ var staticRenderFns = [
       _c("th", { attrs: { scope: "col" } }, [_vm._v("id")]),
       _vm._v(" "),
       _c("th", { attrs: { scope: "col" } }, [_vm._v("nombre")]),
+      _vm._v(" "),
+      _c("th", { attrs: { scope: "col" } }, [_vm._v("Productos asociados")]),
       _vm._v(" "),
       _c("th", { attrs: { scope: "col" } }, [_vm._v("estado")]),
       _vm._v(" "),

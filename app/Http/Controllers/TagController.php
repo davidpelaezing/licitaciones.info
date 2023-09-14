@@ -19,11 +19,12 @@ class TagController extends Controller
     public function listar(Request $request): JsonResponse
     {
         try {
-            $tags = Tag::all();
+            $tags = Tag::withCount('productos');
+            $data = $request->page ? $tags->paginate(10) : $tags->get();
         } catch (\Throwable $th) {
             return response()->json($th->getMessage(), 400);
         }
-        return response()->json($tags);
+        return response()->json($data);
     }
 
     /**

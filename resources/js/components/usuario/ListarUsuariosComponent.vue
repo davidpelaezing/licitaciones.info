@@ -52,6 +52,7 @@
                 </tbody>
             </table>
         </div>
+        <pagination :data="paginacion" :limit="2" @pagination-change-page="getUsuarios"></pagination>
     </div>
     
 </template>
@@ -66,6 +67,7 @@ export default {
     data(){
         return {
             usuarios: [],
+            paginacion: null,
             modal: null,
             editando: false,
             data_editar: null
@@ -79,12 +81,13 @@ export default {
 
     methods: {
 
-        async getUsuarios(){
+        async getUsuarios(page = 1){
             try {
-                const response = await this.axios.get('/user')
-                this.usuarios = response.data
+                const response = await this.axios.get('/user?page=' + page)
+                this.usuarios = response.data.data
+                this.paginacion = response.data
             } catch (error) {
-                console.log(error.response)
+                this.$snotify.warning('¡Hay errores con la peticion!', '¡Error!')
             }
         },
 
@@ -93,12 +96,11 @@ export default {
                 if(!confirm('Seguro que desea cambiar el estado de este item ' + item.nombre)){
                     return false;
                 }
-                const response = await this.axios.put('/user/cambiar-estado/' + item.id);
-                this.$toastr.success('¡El recurso se actualizo con exito!', '¡Exelente!')
+                await this.axios.put('/user/cambiar-estado/' + item.id);
+                this.$snotify.success('¡El recurso se actualizo con exito!', '¡Exelente!')
                 this.getUsuarios();
             }catch (error) {
-                console.log(error)
-                console.log(error.response)
+                this.$snotify.warning('¡Hay errores con la peticion!', '¡Error!')
             }
         },  
 

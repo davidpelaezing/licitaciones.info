@@ -3031,7 +3031,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     this.editar();
   },
   watch: {
-    data_editar: function data_editar(nuevoValor, valorAnterior) {
+    data_editar: function data_editar() {
       this.editar();
     }
   },
@@ -3050,26 +3050,29 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               _context.next = 4;
               return _this.axios.put('/user/actualizar/' + _this.data_editar.id, _this.form);
             case 4:
-              _this.$toastr.success('¡El recurso se actualizo con exito!', '¡Exelente!');
+              _this.$snotify.success('¡El recurso se actualizo con exito!', '¡Exelente!');
               _context.next = 10;
               break;
             case 7:
               _context.next = 9;
               return _this.axios.post('/user/crear', _this.form);
             case 9:
-              _this.$toastr.success('¡El recurso se creo con exito!', '¡Exelente!');
+              _this.$snotify.success('¡El recurso se creo con exito!', '¡Exelente!');
             case 10:
               _this.limpiar();
               _this.$emit('submit');
-              _context.next = 17;
+              _context.next = 18;
               break;
             case 14:
               _context.prev = 14;
               _context.t0 = _context["catch"](0);
-              _this.errores = Object.values(_context.t0.response.data).reduce(function (accumulator, currentArray) {
-                return accumulator.concat(currentArray);
-              }, []);
-            case 17:
+              if (_context.t0.response.status === 422) {
+                _this.errores = Object.values(_context.t0.response.data).reduce(function (accumulator, currentArray) {
+                  return accumulator.concat(currentArray);
+                }, []);
+              }
+              _this.$snotify.warning('¡Hay errores con la peticion!', '¡Error!');
+            case 18:
             case "end":
               return _context.stop();
           }
@@ -3170,6 +3173,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 
 
 
@@ -3180,6 +3184,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   data: function data() {
     return {
       usuarios: [],
+      paginacion: null,
       modal: null,
       editando: false,
       data_editar: null
@@ -3191,35 +3196,37 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   methods: {
     getUsuarios: function getUsuarios() {
-      var _this = this;
+      var _arguments = arguments,
+        _this = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-        var response;
+        var page, response;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
-              _context.prev = 0;
-              _context.next = 3;
-              return _this.axios.get('/user');
-            case 3:
+              page = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : 1;
+              _context.prev = 1;
+              _context.next = 4;
+              return _this.axios.get('/user?page=' + page);
+            case 4:
               response = _context.sent;
-              _this.usuarios = response.data;
-              _context.next = 10;
+              _this.usuarios = response.data.data;
+              _this.paginacion = response.data;
+              _context.next = 12;
               break;
-            case 7:
-              _context.prev = 7;
-              _context.t0 = _context["catch"](0);
-              console.log(_context.t0.response);
-            case 10:
+            case 9:
+              _context.prev = 9;
+              _context.t0 = _context["catch"](1);
+              _this.$snotify.warning('¡Hay errores con la peticion!', '¡Error!');
+            case 12:
             case "end":
               return _context.stop();
           }
-        }, _callee, null, [[0, 7]]);
+        }, _callee, null, [[1, 9]]);
       }))();
     },
     cambiarEstado: function cambiarEstado(item) {
       var _this2 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
-        var response;
         return _regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
@@ -3233,21 +3240,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               _context2.next = 5;
               return _this2.axios.put('/user/cambiar-estado/' + item.id);
             case 5:
-              response = _context2.sent;
-              _this2.$toastr.success('¡El recurso se actualizo con exito!', '¡Exelente!');
+              _this2.$snotify.success('¡El recurso se actualizo con exito!', '¡Exelente!');
               _this2.getUsuarios();
-              _context2.next = 14;
+              _context2.next = 12;
               break;
-            case 10:
-              _context2.prev = 10;
+            case 9:
+              _context2.prev = 9;
               _context2.t0 = _context2["catch"](0);
-              console.log(_context2.t0);
-              console.log(_context2.t0.response);
-            case 14:
+              _this2.$snotify.warning('¡Hay errores con la peticion!', '¡Error!');
+            case 12:
             case "end":
               return _context2.stop();
           }
-        }, _callee2, null, [[0, 10]]);
+        }, _callee2, null, [[0, 9]]);
       }))();
     },
     crear: function crear() {
@@ -8087,7 +8092,11 @@ var render = function () {
             },
           ],
           staticClass: "form-control",
-          attrs: { type: "text", id: "paswword", placeholder: "password ..." },
+          attrs: {
+            type: "password",
+            id: "paswword",
+            placeholder: "password ...",
+          },
           domProps: { value: _vm.form.password },
           on: {
             input: function ($event) {
@@ -8100,7 +8109,7 @@ var render = function () {
         }),
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "form-check" }, [
+      _c("div", { staticClass: "form-check mb-3" }, [
         _c("input", {
           directives: [
             {
@@ -8195,151 +8204,166 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c(
-      "div",
-      { staticClass: "d-flex justify-content-between align-items-center mb-4" },
-      [
-        _c("h3", [_vm._v("Usuarios")]),
-        _vm._v(" "),
-        _c(
-          "button",
-          {
-            staticClass: "btn btn-success",
-            attrs: { type: "button" },
-            on: {
-              click: function ($event) {
-                return _vm.crear()
+  return _c(
+    "div",
+    [
+      _c(
+        "div",
+        {
+          staticClass: "d-flex justify-content-between align-items-center mb-4",
+        },
+        [
+          _c("h3", [_vm._v("Usuarios")]),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-success",
+              attrs: { type: "button" },
+              on: {
+                click: function ($event) {
+                  return _vm.crear()
+                },
               },
             },
+            [_vm._v("Crear usuario")]
+          ),
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          ref: "usuarioModal",
+          staticClass: "modal fade",
+          attrs: {
+            id: "usuarioModal",
+            tabindex: "-1",
+            "aria-labelledby": "usuarioModalLabel",
+            "aria-hidden": "true",
           },
-          [_vm._v("Crear usuario")]
-        ),
-      ]
-    ),
-    _vm._v(" "),
-    _c(
-      "div",
-      {
-        ref: "usuarioModal",
-        staticClass: "modal fade",
-        attrs: {
-          id: "usuarioModal",
-          tabindex: "-1",
-          "aria-labelledby": "usuarioModalLabel",
-          "aria-hidden": "true",
         },
-      },
-      [
-        _c("div", { staticClass: "modal-dialog" }, [
-          _c("div", { staticClass: "modal-content" }, [
-            _c("div", { staticClass: "modal-header" }, [
-              _c(
-                "h1",
-                {
-                  staticClass: "modal-title fs-5",
-                  attrs: { id: "usuarioModalLabel" },
-                },
-                [_vm._v(_vm._s(_vm.editando ? "Editar" : "Crear") + " usuario")]
-              ),
-              _vm._v(" "),
-              _c("button", {
-                staticClass: "btn-close",
-                attrs: {
-                  type: "button",
-                  "data-bs-dismiss": "modal",
-                  "aria-label": "Close",
-                },
-              }),
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "modal-body" },
-              [
-                _c("FormUsuarioComponent", {
-                  attrs: {
-                    data_editar: _vm.data_editar,
-                    editando: _vm.editando,
+        [
+          _c("div", { staticClass: "modal-dialog" }, [
+            _c("div", { staticClass: "modal-content" }, [
+              _c("div", { staticClass: "modal-header" }, [
+                _c(
+                  "h1",
+                  {
+                    staticClass: "modal-title fs-5",
+                    attrs: { id: "usuarioModalLabel" },
                   },
-                  on: {
-                    submit: function ($event) {
-                      _vm.modal.hide(),
-                        (_vm.editando = false),
-                        _vm.getUsuarios()
-                    },
-                    cerrar: function ($event) {
-                      _vm.modal.hide(), (_vm.editando = false)
-                    },
+                  [
+                    _vm._v(
+                      _vm._s(_vm.editando ? "Editar" : "Crear") + " usuario"
+                    ),
+                  ]
+                ),
+                _vm._v(" "),
+                _c("button", {
+                  staticClass: "btn-close",
+                  attrs: {
+                    type: "button",
+                    "data-bs-dismiss": "modal",
+                    "aria-label": "Close",
                   },
                 }),
-              ],
-              1
-            ),
+              ]),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "modal-body" },
+                [
+                  _c("FormUsuarioComponent", {
+                    attrs: {
+                      data_editar: _vm.data_editar,
+                      editando: _vm.editando,
+                    },
+                    on: {
+                      submit: function ($event) {
+                        _vm.modal.hide(),
+                          (_vm.editando = false),
+                          _vm.getUsuarios()
+                      },
+                      cerrar: function ($event) {
+                        _vm.modal.hide(), (_vm.editando = false)
+                      },
+                    },
+                  }),
+                ],
+                1
+              ),
+            ]),
           ]),
-        ]),
-      ]
-    ),
-    _vm._v(" "),
-    _c("div", { staticClass: "table-responsive" }, [
-      _c("table", { staticClass: "table" }, [
-        _vm._m(0),
-        _vm._v(" "),
-        _c(
-          "tbody",
-          _vm._l(_vm.usuarios, function (usuario) {
-            return _c("tr", [
-              _c("th", { attrs: { scope: "row" } }, [
-                _vm._v(_vm._s(usuario.id)),
-              ]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(usuario.nombre))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(usuario.email))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(usuario.admin ? "Si" : "No"))]),
-              _vm._v(" "),
-              _c("td", [
-                _vm._v(_vm._s(usuario.estado ? "Activo" : "Inactivo")),
-              ]),
-              _vm._v(" "),
-              _c("td", [
-                _c("div", { staticClass: "btn-group" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-sm btn-info",
-                      on: {
-                        click: function ($event) {
-                          return _vm.editar(usuario)
-                        },
-                      },
-                    },
-                    [_vm._v("Editar")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-sm",
-                      class: usuario.estado ? "btn-danger" : "btn-success",
-                      on: {
-                        click: function ($event) {
-                          return _vm.cambiarEstado(usuario)
-                        },
-                      },
-                    },
-                    [_vm._v(_vm._s(usuario.estado ? "Inactivar" : "Activar"))]
-                  ),
+        ]
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "table-responsive" }, [
+        _c("table", { staticClass: "table" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c(
+            "tbody",
+            _vm._l(_vm.usuarios, function (usuario) {
+              return _c("tr", [
+                _c("th", { attrs: { scope: "row" } }, [
+                  _vm._v(_vm._s(usuario.id)),
                 ]),
-              ]),
-            ])
-          }),
-          0
-        ),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(usuario.nombre))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(usuario.email))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(usuario.admin ? "Si" : "No"))]),
+                _vm._v(" "),
+                _c("td", [
+                  _vm._v(_vm._s(usuario.estado ? "Activo" : "Inactivo")),
+                ]),
+                _vm._v(" "),
+                _c("td", [
+                  _c("div", { staticClass: "btn-group" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-sm btn-info",
+                        on: {
+                          click: function ($event) {
+                            return _vm.editar(usuario)
+                          },
+                        },
+                      },
+                      [_vm._v("Editar")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-sm",
+                        class: usuario.estado ? "btn-danger" : "btn-success",
+                        on: {
+                          click: function ($event) {
+                            return _vm.cambiarEstado(usuario)
+                          },
+                        },
+                      },
+                      [_vm._v(_vm._s(usuario.estado ? "Inactivar" : "Activar"))]
+                    ),
+                  ]),
+                ]),
+              ])
+            }),
+            0
+          ),
+        ]),
       ]),
-    ]),
-  ])
+      _vm._v(" "),
+      _c("pagination", {
+        attrs: { data: _vm.paginacion, limit: 2 },
+        on: { "pagination-change-page": _vm.getUsuarios },
+      }),
+    ],
+    1
+  )
 }
 var staticRenderFns = [
   function () {

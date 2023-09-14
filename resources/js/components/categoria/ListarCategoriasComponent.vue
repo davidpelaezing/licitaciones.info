@@ -30,6 +30,7 @@
                 <thead>
                     <th scope="col">id</th>
                     <th scope="col">nombre</th>
+                    <th scope="col">Productos asociados</th>
                     <th scope="col">estado</th>
                     <th scope="col">acciones</th>
                 </thead>
@@ -37,6 +38,7 @@
                     <tr v-for="categoria in categorias">
                         <th scope="row">{{ categoria.id }}</th>
                         <td>{{ categoria.nombre }}</td>
+                        <td>{{ categoria.productos_count }}</td>
                         <td>{{ categoria.estado ? 'Activo' : 'Inactivo' }}</td>
                         <td>
                             <div class="btn-group">

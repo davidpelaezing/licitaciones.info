@@ -30,6 +30,7 @@
                 <thead>
                     <th scope="col">id</th>
                     <th scope="col">nombre</th>
+                    <th scope="col">Productos asociados</th>
                     <th scope="col">estado</th>
                     <th scope="col">acciones</th>
                 </thead>
@@ -37,6 +38,7 @@
                     <tr v-for="tag in tags">
                         <th scope="row">{{ tag.id }}</th>
                         <td>{{ tag.nombre }}</td>
+                        <td>{{ tag.productos_count }}</td>
                         <td>{{ tag.estado ? 'Activo' : 'Inactivo' }}</td>
                         <td>
                             <div class="btn-group">
@@ -48,6 +50,7 @@
                 </tbody>
             </table>
         </div>
+        <pagination :data="paginacion" :limit="2" @pagination-change-page="getTags"></pagination>
     </div>
     
 </template>
@@ -62,6 +65,7 @@ export default {
     data(){
         return {
             tags: [],
+            paginacion: null,
             modal: null,
             editando: false,
             data_editar: null
@@ -75,12 +79,13 @@ export default {
 
     methods: {
 
-        async getTags(){
+        async getTags(page = 1){
             try {
-                const response = await this.axios.get('/tag')
-                this.tags = response.data
+                const response = await this.axios.get('/tag?page=' + page)
+                this.tags = response.data.data
+                this.paginacion = response.data
             } catch (error) {
-                console.log(error.response)
+                this.$snotify.warning('¡Hay errores con la peticion!', '¡Error!')
             }
         },
 
@@ -89,12 +94,11 @@ export default {
                 if(!confirm('Seguro que desea cambiar el estado de este item ' + item.nombre)){
                     return false;
                 }
-                const response = await this.axios.put('/tag/cambiar-estado/' + item.id);
-                this.$toastr.success('¡El recurso se actualizo con exito!', '¡Exelente!')
+                await this.axios.put('/tag/cambiar-estado/' + item.id);
+                this.$snotify.success('¡El recurso se actualizo con exito!', '¡Exelente!')
                 this.getTags();
             }catch (error) {
-                console.log(error)
-                console.log(error.response)
+                this.$snotify.warning('¡Hay errores con la peticion!', '¡Error!')
             }
         },  
 
