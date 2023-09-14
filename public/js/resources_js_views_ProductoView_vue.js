@@ -3006,6 +3006,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {
@@ -3027,7 +3032,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         categoria_id: null,
         descripcion: null,
         precio: null,
-        tags: []
+        tags: [],
+        imagen: null
       },
       errores: []
     };
@@ -3098,41 +3104,56 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     submit: function submit() {
       var _this3 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+        var request, i;
         return _regeneratorRuntime().wrap(function _callee3$(_context3) {
           while (1) switch (_context3.prev = _context3.next) {
             case 0:
               _context3.prev = 0;
+              // creamos el form data para poder cargar la imagen
+              request = new FormData();
+              request.append('nombre', _this3.form.nombre);
+              request.append('categoria_id', _this3.form.categoria_id);
+              request.append('descripcion', _this3.form.descripcion);
+              request.append('precio', _this3.form.precio);
+              request.append('imagen', _this3.form.imagen);
+              for (i = 0; i < _this3.form.tags.length; i++) {
+                request.append('tags[]', _this3.form.tags[i]);
+              }
               if (!_this3.editando) {
-                _context3.next = 7;
+                _context3.next = 14;
                 break;
               }
-              _context3.next = 4;
-              return _this3.axios.put('/producto/actualizar/' + _this3.data_editar.id, _this3.form);
-            case 4:
-              _this3.$toastr.success('¡El recurso se actualizo con exito!', '¡Exelente!');
-              _context3.next = 10;
-              break;
-            case 7:
-              _context3.next = 9;
-              return _this3.axios.post('/producto/crear', _this3.form);
-            case 9:
-              _this3.$toastr.success('¡El recurso se creo con exito!', '¡Exelente!');
-            case 10:
-              _this3.limpiar();
-              _this3.$emit('submit');
+              _context3.next = 11;
+              return _this3.axios.post('/producto/actualizar/' + _this3.data_editar.id, request);
+            case 11:
+              _this3.$snotify.success('¡El recurso se actualizo con exito!', '¡Exelente!');
               _context3.next = 17;
               break;
             case 14:
-              _context3.prev = 14;
-              _context3.t0 = _context3["catch"](0);
-              _this3.errores = Object.values(_context3.t0.response.data).reduce(function (accumulator, currentArray) {
-                return accumulator.concat(currentArray);
-              }, []);
+              _context3.next = 16;
+              return _this3.axios.post('/producto/crear', request);
+            case 16:
+              _this3.$snotify.success('¡El recurso se creo con exito!', '¡Exelente!');
             case 17:
+              _this3.limpiar();
+              _this3.$emit('submit');
+              _context3.next = 26;
+              break;
+            case 21:
+              _context3.prev = 21;
+              _context3.t0 = _context3["catch"](0);
+              console.log(_context3.t0);
+              if (_context3.t0.response.status === 422) {
+                _this3.errores = Object.values(_context3.t0.response.data).reduce(function (accumulator, currentArray) {
+                  return accumulator.concat(currentArray);
+                }, []);
+              }
+              _this3.$snotify.warning('¡Hay errores con la peticion!', '¡Error!');
+            case 26:
             case "end":
               return _context3.stop();
           }
-        }, _callee3, null, [[0, 14]]);
+        }, _callee3, null, [[0, 21]]);
       }))();
     },
     editar: function editar() {
@@ -3142,8 +3163,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         this.form.categoria_id = this.data_editar.categoria_id;
         this.form.descripcion = this.data_editar.descripcion;
         this.form.precio = this.data_editar.precio;
-        this.form.tags = this.data_editar.tags;
+        this.form.tags = this.data_editar.tags.map(function (item) {
+          return item.id;
+        });
       }
+    },
+    cargarImagen: function cargarImagen(event) {
+      this.form.imagen = event.target.files[0];
     },
     limpiar: function limpiar() {
       this.form.nombre = null;
@@ -3151,6 +3177,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.form.descripcion = null;
       this.form.precio = null;
       this.form.tags = [];
+      this.form.imagen = null;
+      this.$refs.inputImagen.value = null;
       this.errores = [];
     }
   }
@@ -3233,6 +3261,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -3243,43 +3281,53 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   data: function data() {
     return {
       productos: [],
+      categorias: [],
+      paginacion: null,
       modal: null,
       editando: false,
-      data_editar: null
+      data_editar: null,
+      filtro: {
+        categoria_id: null
+      }
     };
   },
   mounted: function mounted() {
     this.modal = new bootstrap__WEBPACK_IMPORTED_MODULE_1__.Modal(this.$refs.productoModal);
     this.getProductos();
+    this.getCategorias();
   },
   methods: {
     getProductos: function getProductos() {
-      var _this = this;
+      var _arguments = arguments,
+        _this = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-        var response;
+        var page, categoria, response;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
-              _context.prev = 0;
-              _context.next = 3;
-              return _this.axios.get('/producto');
-            case 3:
+              page = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : 1;
+              _context.prev = 1;
+              categoria = _this.filtro.categoria_id ? _this.filtro.categoria_id : '';
+              _context.next = 5;
+              return _this.axios.get('/producto?page=' + page + '&categoria_id=' + categoria);
+            case 5:
               response = _context.sent;
-              _this.productos = response.data;
-              _context.next = 10;
+              _this.productos = response.data.data;
+              _this.paginacion = response.data;
+              _context.next = 13;
               break;
-            case 7:
-              _context.prev = 7;
-              _context.t0 = _context["catch"](0);
-              console.log(_context.t0.response);
             case 10:
+              _context.prev = 10;
+              _context.t0 = _context["catch"](1);
+              console.log(_context.t0.response);
+            case 13:
             case "end":
               return _context.stop();
           }
-        }, _callee, null, [[0, 7]]);
+        }, _callee, null, [[1, 10]]);
       }))();
     },
-    cambiarEstado: function cambiarEstado(item) {
+    getCategorias: function getCategorias() {
       var _this2 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
         var response;
@@ -3287,32 +3335,61 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
               _context2.prev = 0;
-              if (confirm('Seguro que desea cambiar el estado de este item ' + item.nombre)) {
-                _context2.next = 3;
-                break;
-              }
-              return _context2.abrupt("return", false);
+              _context2.next = 3;
+              return _this2.axios.get('/categoria?activo=true');
             case 3:
-              _context2.next = 5;
-              return _this2.axios.put('/producto/cambiar-estado/' + item.id);
-            case 5:
               response = _context2.sent;
-              _this2.$toastr.success('¡El recurso se actualizo con exito!', '¡Exelente!');
-              _this2.getProductos();
-              console.log(response);
-              _context2.next = 15;
+              _this2.categorias = response.data;
+              _context2.next = 10;
               break;
-            case 11:
-              _context2.prev = 11;
+            case 7:
+              _context2.prev = 7;
               _context2.t0 = _context2["catch"](0);
               console.log(_context2.t0);
-              console.log(_context2.t0.response);
-            case 15:
+            case 10:
             case "end":
               return _context2.stop();
           }
-        }, _callee2, null, [[0, 11]]);
+        }, _callee2, null, [[0, 7]]);
       }))();
+    },
+    cambiarEstado: function cambiarEstado(item) {
+      var _this3 = this;
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+        var response;
+        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+          while (1) switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.prev = 0;
+              if (confirm('Seguro que desea cambiar el estado de este item ' + item.nombre)) {
+                _context3.next = 3;
+                break;
+              }
+              return _context3.abrupt("return", false);
+            case 3:
+              _context3.next = 5;
+              return _this3.axios.put('/producto/cambiar-estado/' + item.id);
+            case 5:
+              response = _context3.sent;
+              _this3.$toastr.success('¡El recurso se actualizo con exito!', '¡Exelente!');
+              _this3.getProductos();
+              console.log(response);
+              _context3.next = 15;
+              break;
+            case 11:
+              _context3.prev = 11;
+              _context3.t0 = _context3["catch"](0);
+              console.log(_context3.t0);
+              console.log(_context3.t0.response);
+            case 15:
+            case "end":
+              return _context3.stop();
+          }
+        }, _callee3, null, [[0, 11]]);
+      }))();
+    },
+    cargarlink: function cargarlink(link) {
+      return link ? 'http://localhost:8000/storage/productos/' + link : 'https://picsum.photos/100/100';
     },
     crearProducto: function crearProducto() {
       this.data_editar = null;
@@ -8250,6 +8327,19 @@ var render = function () {
         }),
       ]),
       _vm._v(" "),
+      _c("div", { staticClass: "mb-3" }, [
+        _c("label", { staticClass: "form-label", attrs: { for: "precio" } }, [
+          _vm._v("Imagen"),
+        ]),
+        _vm._v(" "),
+        _c("input", {
+          ref: "inputImagen",
+          staticClass: "form-control",
+          attrs: { type: "file", id: "precio", placeholder: "precio ..." },
+          on: { change: _vm.cargarImagen },
+        }),
+      ]),
+      _vm._v(" "),
       _c("div", { staticClass: "btn-group" }, [
         _c(
           "button",
@@ -8296,157 +8386,237 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c(
-      "div",
-      { staticClass: "d-flex justify-content-between align-items-center mb-4" },
-      [
-        _c("h3", [_vm._v("Productos")]),
-        _vm._v(" "),
-        _c(
-          "button",
-          {
-            staticClass: "btn btn-success",
-            attrs: { type: "button" },
-            on: {
-              click: function ($event) {
-                return _vm.crearProducto()
+  return _c(
+    "div",
+    [
+      _c(
+        "div",
+        {
+          staticClass: "d-flex justify-content-between align-items-center mb-4",
+        },
+        [
+          _c("h3", [_vm._v("Productos")]),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-success",
+              attrs: { type: "button" },
+              on: {
+                click: function ($event) {
+                  return _vm.crearProducto()
+                },
               },
             },
+            [_vm._v("Crear producto")]
+          ),
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          ref: "productoModal",
+          staticClass: "modal fade",
+          attrs: {
+            id: "productoModal",
+            tabindex: "-1",
+            "aria-labelledby": "productoModalLabel",
+            "aria-hidden": "true",
           },
-          [_vm._v("Crear producto")]
-        ),
-      ]
-    ),
-    _vm._v(" "),
-    _c(
-      "div",
-      {
-        ref: "productoModal",
-        staticClass: "modal fade",
-        attrs: {
-          id: "productoModal",
-          tabindex: "-1",
-          "aria-labelledby": "productoModalLabel",
-          "aria-hidden": "true",
         },
-      },
-      [
-        _c("div", { staticClass: "modal-dialog" }, [
-          _c("div", { staticClass: "modal-content" }, [
-            _c("div", { staticClass: "modal-header" }, [
-              _c(
-                "h1",
-                {
-                  staticClass: "modal-title fs-5",
-                  attrs: { id: "productoModalLabel" },
-                },
-                [
-                  _vm._v(
-                    _vm._s(_vm.editando ? "Editar" : "Crear") + " producto"
-                  ),
-                ]
-              ),
-              _vm._v(" "),
-              _c("button", {
-                staticClass: "btn-close",
-                attrs: {
-                  type: "button",
-                  "data-bs-dismiss": "modal",
-                  "aria-label": "Close",
-                },
-              }),
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "modal-body" },
-              [
-                _c("FormProductoComponent", {
-                  attrs: {
-                    data_editar: _vm.data_editar,
-                    editando: _vm.editando,
+        [
+          _c("div", { staticClass: "modal-dialog" }, [
+            _c("div", { staticClass: "modal-content" }, [
+              _c("div", { staticClass: "modal-header" }, [
+                _c(
+                  "h1",
+                  {
+                    staticClass: "modal-title fs-5",
+                    attrs: { id: "productoModalLabel" },
                   },
-                  on: {
-                    submit: function ($event) {
-                      _vm.modal.hide(),
-                        (_vm.editando = false),
-                        _vm.getProductos()
-                    },
-                    cerrar: function ($event) {
-                      _vm.modal.hide(), (_vm.editando = false)
-                    },
+                  [
+                    _vm._v(
+                      _vm._s(_vm.editando ? "Editar" : "Crear") + " producto"
+                    ),
+                  ]
+                ),
+                _vm._v(" "),
+                _c("button", {
+                  staticClass: "btn-close",
+                  attrs: {
+                    type: "button",
+                    "data-bs-dismiss": "modal",
+                    "aria-label": "Close",
                   },
                 }),
-              ],
-              1
-            ),
+              ]),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "modal-body" },
+                [
+                  _c("FormProductoComponent", {
+                    attrs: {
+                      data_editar: _vm.data_editar,
+                      editando: _vm.editando,
+                    },
+                    on: {
+                      submit: function ($event) {
+                        _vm.modal.hide(),
+                          (_vm.editando = false),
+                          _vm.getProductos()
+                      },
+                      cerrar: function ($event) {
+                        _vm.modal.hide(), (_vm.editando = false)
+                      },
+                    },
+                  }),
+                ],
+                1
+              ),
+            ]),
           ]),
-        ]),
-      ]
-    ),
-    _vm._v(" "),
-    _c("div", { staticClass: "table-responsive" }, [
-      _c("table", { staticClass: "table" }, [
-        _vm._m(0),
-        _vm._v(" "),
-        _c(
-          "tbody",
-          _vm._l(_vm.productos, function (producto) {
-            return _c("tr", [
-              _c("th", { attrs: { scope: "row" } }, [
-                _vm._v(_vm._s(producto.id)),
-              ]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(producto.nombre))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(producto.categoria.nombre))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(producto.descripcion))]),
-              _vm._v(" "),
-              _c("td", [_vm._v("$" + _vm._s(producto.precio))]),
-              _vm._v(" "),
-              _c("td", [
-                _vm._v(_vm._s(producto.estado ? "Activo" : "Inactivo")),
-              ]),
-              _vm._v(" "),
-              _c("td", [
-                _c("div", { staticClass: "btn-group" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-sm btn-info",
-                      on: {
-                        click: function ($event) {
-                          return _vm.editarProducto(producto)
-                        },
-                      },
-                    },
-                    [_vm._v("Editar")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-sm",
-                      class: producto.estado ? "btn-danger" : "btn-success",
-                      on: {
-                        click: function ($event) {
-                          return _vm.cambiarEstado(producto)
-                        },
-                      },
-                    },
-                    [_vm._v(_vm._s(producto.estado ? "Inactivar" : "Activar"))]
-                  ),
-                ]),
-              ]),
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "select",
+        {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.filtro.categoria_id,
+              expression: "filtro.categoria_id",
+            },
+          ],
+          staticClass: "form-select mb-3",
+          attrs: { "aria-label": "Default select example" },
+          on: {
+            change: [
+              function ($event) {
+                var $$selectedVal = Array.prototype.filter
+                  .call($event.target.options, function (o) {
+                    return o.selected
+                  })
+                  .map(function (o) {
+                    var val = "_value" in o ? o._value : o.value
+                    return val
+                  })
+                _vm.$set(
+                  _vm.filtro,
+                  "categoria_id",
+                  $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+                )
+              },
+              function ($event) {
+                return _vm.getProductos()
+              },
+            ],
+          },
+        },
+        [
+          _c("option", { attrs: { selected: "" }, domProps: { value: null } }, [
+            _vm._v("Filtra por una categoria"),
+          ]),
+          _vm._v(" "),
+          _vm._l(_vm.categorias, function (categoria) {
+            return _c("option", { domProps: { value: categoria.id } }, [
+              _vm._v(
+                _vm._s(categoria.nombre) +
+                  " (" +
+                  _vm._s(categoria.productos_count) +
+                  ")"
+              ),
             ])
           }),
-          0
-        ),
+        ],
+        2
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "table-responsive" }, [
+        _c("table", { staticClass: "table" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c(
+            "tbody",
+            _vm._l(_vm.productos, function (producto) {
+              return _c("tr", [
+                _c("th", { attrs: { scope: "row" } }, [
+                  _c("img", {
+                    staticClass: "rounded-circle",
+                    attrs: {
+                      src: _vm.cargarlink(producto.imagen_url),
+                      width: "25px",
+                      height: "25px",
+                      alt: "Imagen del producto",
+                    },
+                  }),
+                ]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(producto.nombre))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(producto.categoria.nombre))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(producto.descripcion))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(producto.tags_count))]),
+                _vm._v(" "),
+                _c("td", [_vm._v("$" + _vm._s(producto.precio))]),
+                _vm._v(" "),
+                _c("td", [
+                  _vm._v(_vm._s(producto.estado ? "Activo" : "Inactivo")),
+                ]),
+                _vm._v(" "),
+                _c("td", [
+                  _c("div", { staticClass: "btn-group" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-sm btn-info",
+                        on: {
+                          click: function ($event) {
+                            return _vm.editarProducto(producto)
+                          },
+                        },
+                      },
+                      [_vm._v("Editar")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-sm",
+                        class: producto.estado ? "btn-danger" : "btn-success",
+                        on: {
+                          click: function ($event) {
+                            return _vm.cambiarEstado(producto)
+                          },
+                        },
+                      },
+                      [
+                        _vm._v(
+                          _vm._s(producto.estado ? "Inactivar" : "Activar")
+                        ),
+                      ]
+                    ),
+                  ]),
+                ]),
+              ])
+            }),
+            0
+          ),
+        ]),
       ]),
-    ]),
-  ])
+      _vm._v(" "),
+      _c("pagination", {
+        attrs: { data: _vm.paginacion, limit: 2 },
+        on: { "pagination-change-page": _vm.getProductos },
+      }),
+    ],
+    1
+  )
 }
 var staticRenderFns = [
   function () {
@@ -8461,6 +8631,8 @@ var staticRenderFns = [
       _c("th", { attrs: { scope: "col" } }, [_vm._v("categoria")]),
       _vm._v(" "),
       _c("th", { attrs: { scope: "col" } }, [_vm._v("descripcion")]),
+      _vm._v(" "),
+      _c("th", { attrs: { scope: "col" } }, [_vm._v("#tags")]),
       _vm._v(" "),
       _c("th", { attrs: { scope: "col" } }, [_vm._v("precio")]),
       _vm._v(" "),

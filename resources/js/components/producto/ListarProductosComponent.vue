@@ -25,6 +25,11 @@
             </div>
         </div>
 
+        <select class="form-select mb-3" v-model="filtro.categoria_id" aria-label="Default select example" @change="getProductos()">
+            <option selected :value="null">Filtra por una categoria</option>
+            <option v-for="categoria in categorias" :value="categoria.id">{{ categoria.nombre }} ({{ categoria.productos_count }})</option>
+        </select>
+
         <div class="table-responsive">
             <table class="table">
                 <thead>
@@ -32,16 +37,18 @@
                     <th scope="col">nombre</th>
                     <th scope="col">categoria</th>
                     <th scope="col">descripcion</th>
+                    <th scope="col">#tags</th>
                     <th scope="col">precio</th>
                     <th scope="col">estado</th>
                     <th scope="col">acciones</th>
                 </thead>
                 <tbody>
                     <tr v-for="producto in productos">
-                        <th scope="row">{{ producto.id }}</th>
+                        <th scope="row"><img :src="cargarlink(producto.imagen_url)" width="25px" height="25px" class="rounded-circle" alt="Imagen del producto"></th>
                         <td>{{ producto.nombre }}</td>
                         <td>{{ producto.categoria.nombre }}</td>
                         <td>{{ producto.descripcion }}</td>
+                        <td>{{ producto.tags_count }}</td>
                         <td>${{ producto.precio }}</td>
                         <td>{{ producto.estado ? 'Activo' : 'Inactivo' }}</td>
                         <td>
@@ -54,6 +61,9 @@
                 </tbody>
             </table>
         </div>
+
+        <pagination :data="paginacion" :limit="2" @pagination-change-page="getProductos"></pagination>
+
     </div>
     
 </template>
@@ -68,25 +78,42 @@ export default {
     data(){
         return {
             productos: [],
+            categorias: [],
+            paginacion: null,
             modal: null,
             editando: false,
-            data_editar: null
+            data_editar: null,
+            filtro: {
+                categoria_id: null
+            },
         }
     },
 
     mounted(){
         this.modal = new Modal(this.$refs.productoModal)
         this.getProductos();
+        this.getCategorias();
     },
 
     methods: {
 
-        async getProductos(){
+        async getProductos(page = 1){
             try {
-                const response = await this.axios.get('/producto')
-                this.productos = response.data
+                const categoria = this.filtro.categoria_id ? this.filtro.categoria_id : '';
+                const response = await this.axios.get('/producto?page=' + page + '&categoria_id=' + categoria)
+                this.productos = response.data.data
+                this.paginacion = response.data
             } catch (error) {
                 console.log(error.response)
+            }
+        },
+
+        async getCategorias() {
+            try {
+                const response = await this.axios.get('/categoria?activo=true');
+                this.categorias = response.data;
+            } catch (error) {
+                console.log(error)
             }
         },
 
@@ -103,7 +130,11 @@ export default {
                 console.log(error)
                 console.log(error.response)
             }
-        },  
+        },
+
+        cargarlink(link){
+            return link ? 'http://localhost:8000/storage/productos/' + link : 'https://picsum.photos/100/100'
+        },
 
         crearProducto(){
             this.data_editar = null;

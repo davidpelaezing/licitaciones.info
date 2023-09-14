@@ -23,6 +23,7 @@ class ProductoController extends Controller
     {
         try {
             $productos = Producto::with('categoria', 'tags:id,nombre')
+                ->withCount('tags')
                 ->whereCategoria($request->categoria_id)
                 ->orderPrecio($request->order);
             $data = $request->page ? $productos->paginate(10) : $productos->get();
@@ -49,7 +50,7 @@ class ProductoController extends Controller
 
             // si se ha enviado una imagen la almacenamos y guardamos la ruta
             if ($request->hasFile('imagen')) {
-                $ruta = $this->subirImagen('productos', $request->file('imagen'));
+                $ruta = $this->subirImagen('public/productos', $request->file('imagen'));
                 $producto->actualizarImagen($ruta);
             }
             return response()->json($producto, 201);
@@ -78,10 +79,10 @@ class ProductoController extends Controller
             if ($request->hasFile('imagen')) {
 
                 if ($producto->imagen_url) {
-                    $this->eliminarImagen($producto->imagen_url);
+                    $this->eliminarImagen('public/productos' . $producto->imagen_url);
                 }
 
-                $ruta = $this->subirImagen('productos', $request->file('imagen'));
+                $ruta = $this->subirImagen('public/productos', $request->file('imagen'));
                 $producto->actualizarImagen($ruta);
             }
             return response()->json($producto);

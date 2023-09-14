@@ -31,6 +31,7 @@
         </div>
     </nav>
     <div class="container-fluid mt-5">
+        <vue-snotify></vue-snotify>
         <router-view/>
     </div>
 </div>

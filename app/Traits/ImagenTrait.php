@@ -17,7 +17,8 @@ trait ImagenTrait
     public function subirImagen($ruta, $file): string
     {
         $nombre_unique = uniqid() . '.' . $file->getClientOriginalExtension();
-        return Storage::putFileAs($ruta, $file, $nombre_unique);
+        Storage::putFileAs($ruta, $file, $nombre_unique);
+        return $nombre_unique;
     }
 
     /**

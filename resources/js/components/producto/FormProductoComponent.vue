@@ -29,6 +29,11 @@
             <input type="number" class="form-control" v-model="form.precio" id="precio" placeholder="precio ...">
         </div>
 
+        <div class="mb-3">
+            <label for="precio" class="form-label">Imagen</label>
+            <input type="file" class="form-control" id="precio" ref="inputImagen" placeholder="precio ..." @change="cargarImagen">
+        </div>
+
         <div class="btn-group">
             <button type="submit" class="btn btn-primary">{{ editando ? 'Editar' : 'Crear' }}</button>
             <button type="button" class="btn btn-danger" @click="$emit('cerrar')">Cancelar</button>
@@ -60,7 +65,8 @@ data(){
             categoria_id: null,
             descripcion: null,
             precio: null,
-            tags: []
+            tags: [],
+            imagen: null
         },
         errores: [],
     }
@@ -100,19 +106,37 @@ methods: {
 
     async submit(){
         try {
-            if (this.editando){
-                await this.axios.put('/producto/actualizar/' + this.data_editar.id, this.form);
-                this.$toastr.success('¡El recurso se actualizo con exito!', '¡Exelente!')
-            }else{
-                await this.axios.post('/producto/crear', this.form);
-                this.$toastr.success('¡El recurso se creo con exito!', '¡Exelente!')
+
+            // creamos el form data para poder cargar la imagen
+            const request = new FormData();
+            request.append('nombre', this.form.nombre);
+            request.append('categoria_id', this.form.categoria_id);
+            request.append('descripcion', this.form.descripcion);
+            request.append('precio', this.form.precio);
+            request.append('imagen', this.form.imagen);
+
+            for (var i = 0; i < this.form.tags.length; i++) {
+                request.append('tags[]', this.form.tags[i]);
             }
+
+            if (this.editando){
+                await this.axios.post('/producto/actualizar/' + this.data_editar.id, request);
+                this.$snotify.success('¡El recurso se actualizo con exito!', '¡Exelente!')
+            }else{
+                await this.axios.post('/producto/crear', request);
+                this.$snotify.success('¡El recurso se creo con exito!', '¡Exelente!')
+            }
+            
             this.limpiar()
             this.$emit('submit')
         } catch (error) {
-            this.errores = Object.values(error.response.data).reduce((accumulator, currentArray) => {
-                return accumulator.concat(currentArray);
-            }, []);
+            console.log(error)
+            if(error.response.status === 422){
+                this.errores = Object.values(error.response.data).reduce((accumulator, currentArray) => {
+                    return accumulator.concat(currentArray);
+                }, []);
+            }   
+            this.$snotify.warning('¡Hay errores con la peticion!', '¡Error!')
         }
     },
 
@@ -123,9 +147,14 @@ methods: {
             this.form.categoria_id = this.data_editar.categoria_id
             this.form.descripcion = this.data_editar.descripcion
             this.form.precio = this.data_editar.precio
-            this.form.tags = this.data_editar.tags
+            this.form.tags = this.data_editar.tags.map(item => {
+                return item.id
+            })
         }
-        
+    },
+
+    cargarImagen(event) {
+      this.form.imagen = event.target.files[0];
     },
 
     limpiar(){
@@ -134,6 +163,8 @@ methods: {
         this.form.descripcion = null
         this.form.precio = null
         this.form.tags = []
+        this.form.imagen = null
+        this.$refs.inputImagen.value = null
         this.errores = []
     }
 

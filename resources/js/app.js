@@ -1,10 +1,14 @@
-import toastr from 'toastr';
 import axios from 'axios';
 import VueAxios from 'vue-axios'
 import Vue from 'vue';
 import App from './App.vue';
 import router from './router.js';
+import Snotify, { SnotifyPosition } from 'vue-snotify';
 import 'bootstrap/dist/css/bootstrap.css'
+import 'vue-snotify/styles/material.css';
+
+
+Vue.component('pagination', require('laravel-vue-pagination'));
 
 axios.defaults.baseURL = '/api';
 axios.interceptors.request.use(
@@ -25,8 +29,15 @@ axios.interceptors.request.use(
   }
 );
 
-Vue.prototype.$toastr = toastr
+const options = {
+  toast: {
+    position: SnotifyPosition.rightTop,
+    timeout: 6000,
+  }
+};
+
 Vue.use(VueAxios, axios);
+Vue.use(Snotify, options);
 
 new Vue({
   el: '#app',
