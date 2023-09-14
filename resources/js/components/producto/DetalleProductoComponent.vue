@@ -1,19 +1,27 @@
 <template>
     <div class="card" style="width: 100%;">
-        <img src="https://picsum.photos/500/500" class="card-img-top" alt="...">
         <div class="card-body">
-            <h5 class="card-title">{{ producto.nombre }}</h5>
-            <h5>categoria <span class="badge bg-secondary">{{ producto.categoria.nombre}}</span></h5>
-            <span class="badge bg-secondary" v-for="tag in producto.tags">{{ tag.nombre}}</span>
-            <p class="card-text">{{ producto.descripcion }}</p>
-            
-            <form @submit.prevent="agregarAlCarro()">
-                <div class="input-group mb-3">
-                    <input type="number" class="form-control" v-model="form.cantidad" placeholder="cantidad a agregar" aria-label="cantidad a agregar" aria-describedby="button-addon2">
-                    <button class="btn btn-success" type="submit" id="button-addon2">Agregar</button>
-                </div>
-            </form>
+            <div class="row">
 
+                <div class="col-md-4 col-sm-12">
+                    <img :src="cargarlink(producto.imagen_url)" class="img-fluid" alt="Imagen del producto">
+                </div>
+
+                <div class="col-md-8 col-sm-12">
+                    <h2 class="card-title">{{ producto.nombre }}</h2>
+                    <h4 class="card-title">${{ producto.precio }}</h4>
+                    <h5>categoria: <span class="badge bg-secondary">{{ producto.categoria.nombre}}</span></h5>
+                    <span class="badge bg-primary" v-for="tag in producto.tags">{{ tag.nombre}}</span>
+                    <p class="card-text">{{ producto.descripcion }}</p>
+                    <form @submit.prevent="agregarAlCarro()">
+                        <div class="input-group mb-3">
+                            <input type="number" class="form-control" v-model="form.cantidad" placeholder="cantidad a agregar" aria-label="cantidad a agregar" aria-describedby="button-addon2">
+                            <button class="btn btn-success" type="submit" id="button-addon2">Agregar</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
         </div>
     </div>
 </template>
@@ -51,6 +59,10 @@ export default {
                     this.$router.push('/login')
                 }
             }
+        },
+
+        cargarlink(link){
+            return link ? 'http://localhost:8000/storage/productos/' + link : 'https://picsum.photos/500/500'
         },
 
         limpiar(){

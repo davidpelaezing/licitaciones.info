@@ -3188,7 +3188,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             case 9:
               _context.prev = 9;
               _context.t0 = _context["catch"](1);
-              console.log(_context.t0.response);
+              _this.$snotify.warning('¡Hay errores con la peticion!', '¡Error!');
             case 12:
             case "end":
               return _context.stop();

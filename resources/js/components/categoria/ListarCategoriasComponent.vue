@@ -85,7 +85,7 @@ export default {
                 this.categorias = response.data.data
                 this.paginacion = response.data
             } catch (error) {
-                console.log(error.response)
+                this.$snotify.warning('¡Hay errores con la peticion!', '¡Error!')
             }
         },
 

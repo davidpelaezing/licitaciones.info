@@ -3115,7 +3115,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               request.append('categoria_id', _this3.form.categoria_id);
               request.append('descripcion', _this3.form.descripcion);
               request.append('precio', _this3.form.precio);
-              request.append('imagen', _this3.form.imagen);
+              if (_this3.form.imagen != null) {
+                request.append('imagen', _this3.form.imagen);
+              }
               for (i = 0; i < _this3.form.tags.length; i++) {
                 request.append('tags[]', _this3.form.tags[i]);
               }

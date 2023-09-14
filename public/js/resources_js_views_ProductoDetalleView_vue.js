@@ -43,6 +43,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {
@@ -132,6 +133,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {
@@ -178,6 +187,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           }
         }, _callee, null, [[0, 8]]);
       }))();
+    },
+    cargarlink: function cargarlink(link) {
+      return link ? 'http://localhost:8000/storage/productos/' + link : 'https://picsum.photos/500/500';
     },
     limpiar: function limpiar() {
       this.form.cantidad = 1;
@@ -491,6 +503,8 @@ var render = function () {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "card" }, [
     _c("div", { staticClass: "card-body" }, [
+      _c("h2", [_vm._v("Lista de comentarios")]),
+      _vm._v(" "),
       _c(
         "ol",
         { staticClass: "list-group list-group-numbered mb-4" },
@@ -534,12 +548,6 @@ var render = function () {
         },
         [
           _c("div", { staticClass: "mb-3" }, [
-            _c(
-              "label",
-              { staticClass: "form-label", attrs: { for: "descripcion" } },
-              [_vm._v("Comentario")]
-            ),
-            _vm._v(" "),
             _c("textarea", {
               directives: [
                 {
@@ -550,7 +558,11 @@ var render = function () {
                 },
               ],
               staticClass: "form-control",
-              attrs: { id: "descripcion", rows: "3" },
+              attrs: {
+                id: "descripcion",
+                rows: "3",
+                placeholder: "Escribe tu comentario aqui",
+              },
               domProps: { value: _vm.form.texto },
               on: {
                 input: function ($event) {
@@ -596,89 +608,102 @@ var render = function () {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "card", staticStyle: { width: "100%" } }, [
-    _c("img", {
-      staticClass: "card-img-top",
-      attrs: { src: "https://picsum.photos/500/500", alt: "..." },
-    }),
-    _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "card-body" },
-      [
-        _c("h5", { staticClass: "card-title" }, [
-          _vm._v(_vm._s(_vm.producto.nombre)),
-        ]),
-        _vm._v(" "),
-        _c("h5", [
-          _vm._v("categoria "),
-          _c("span", { staticClass: "badge bg-secondary" }, [
-            _vm._v(_vm._s(_vm.producto.categoria.nombre)),
-          ]),
-        ]),
-        _vm._v(" "),
-        _vm._l(_vm.producto.tags, function (tag) {
-          return _c("span", { staticClass: "badge bg-secondary" }, [
-            _vm._v(_vm._s(tag.nombre)),
-          ])
-        }),
-        _vm._v(" "),
-        _c("p", { staticClass: "card-text" }, [
-          _vm._v(_vm._s(_vm.producto.descripcion)),
+    _c("div", { staticClass: "card-body" }, [
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-md-4 col-sm-12" }, [
+          _c("img", {
+            staticClass: "img-fluid",
+            attrs: {
+              src: _vm.cargarlink(_vm.producto.imagen_url),
+              alt: "Imagen del producto",
+            },
+          }),
         ]),
         _vm._v(" "),
         _c(
-          "form",
-          {
-            on: {
-              submit: function ($event) {
-                $event.preventDefault()
-                return _vm.agregarAlCarro()
-              },
-            },
-          },
+          "div",
+          { staticClass: "col-md-8 col-sm-12" },
           [
-            _c("div", { staticClass: "input-group mb-3" }, [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.form.cantidad,
-                    expression: "form.cantidad",
-                  },
-                ],
-                staticClass: "form-control",
-                attrs: {
-                  type: "number",
-                  placeholder: "cantidad a agregar",
-                  "aria-label": "cantidad a agregar",
-                  "aria-describedby": "button-addon2",
-                },
-                domProps: { value: _vm.form.cantidad },
-                on: {
-                  input: function ($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.form, "cantidad", $event.target.value)
-                  },
-                },
-              }),
-              _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-success",
-                  attrs: { type: "submit", id: "button-addon2" },
-                },
-                [_vm._v("Agregar")]
-              ),
+            _c("h2", { staticClass: "card-title" }, [
+              _vm._v(_vm._s(_vm.producto.nombre)),
             ]),
-          ]
+            _vm._v(" "),
+            _c("h4", { staticClass: "card-title" }, [
+              _vm._v("$" + _vm._s(_vm.producto.precio)),
+            ]),
+            _vm._v(" "),
+            _c("h5", [
+              _vm._v("categoria: "),
+              _c("span", { staticClass: "badge bg-secondary" }, [
+                _vm._v(_vm._s(_vm.producto.categoria.nombre)),
+              ]),
+            ]),
+            _vm._v(" "),
+            _vm._l(_vm.producto.tags, function (tag) {
+              return _c("span", { staticClass: "badge bg-primary" }, [
+                _vm._v(_vm._s(tag.nombre)),
+              ])
+            }),
+            _vm._v(" "),
+            _c("p", { staticClass: "card-text" }, [
+              _vm._v(_vm._s(_vm.producto.descripcion)),
+            ]),
+            _vm._v(" "),
+            _c(
+              "form",
+              {
+                on: {
+                  submit: function ($event) {
+                    $event.preventDefault()
+                    return _vm.agregarAlCarro()
+                  },
+                },
+              },
+              [
+                _c("div", { staticClass: "input-group mb-3" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.form.cantidad,
+                        expression: "form.cantidad",
+                      },
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "number",
+                      placeholder: "cantidad a agregar",
+                      "aria-label": "cantidad a agregar",
+                      "aria-describedby": "button-addon2",
+                    },
+                    domProps: { value: _vm.form.cantidad },
+                    on: {
+                      input: function ($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.form, "cantidad", $event.target.value)
+                      },
+                    },
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-success",
+                      attrs: { type: "submit", id: "button-addon2" },
+                    },
+                    [_vm._v("Agregar")]
+                  ),
+                ]),
+              ]
+            ),
+          ],
+          2
         ),
-      ],
-      2
-    ),
+      ]),
+    ]),
   ])
 }
 var staticRenderFns = []

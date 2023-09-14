@@ -113,7 +113,9 @@ methods: {
             request.append('categoria_id', this.form.categoria_id);
             request.append('descripcion', this.form.descripcion);
             request.append('precio', this.form.precio);
-            request.append('imagen', this.form.imagen);
+            if(this.form.imagen != null){
+                request.append('imagen', this.form.imagen);
+            }
 
             for (var i = 0; i < this.form.tags.length; i++) {
                 request.append('tags[]', this.form.tags[i]);

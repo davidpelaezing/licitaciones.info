@@ -80,6 +80,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
@@ -109,7 +118,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     submit: function submit() {
       var _this = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-        var response;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
@@ -117,7 +125,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               _context.next = 3;
               return _this.axios.post('/factura/crear', _this.form);
             case 3:
-              response = _context.sent;
+              _this.$snotify.success('¡El recurso se creo con exito!', '¡Exelente!');
               _this.limpiar();
               _this.$router.push("/");
               _context.next = 12;
@@ -125,10 +133,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             case 8:
               _context.prev = 8;
               _context.t0 = _context["catch"](0);
-              console.error(_context.t0.response);
-              _this.errores = Object.values(_context.t0.response.data).reduce(function (accumulator, currentArray) {
-                return accumulator.concat(currentArray);
-              }, []);
+              if (_context.t0.response.status === 422) {
+                _this.errores = Object.values(_context.t0.response.data).reduce(function (accumulator, currentArray) {
+                  return accumulator.concat(currentArray);
+                }, []);
+              }
+              _this.$snotify.warning('¡Hay errores con la peticion!', '¡Error!');
             case 12:
             case "end":
               return _context.stop();
@@ -169,7 +179,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) switch (_context3.prev = _context3.next) {
             case 0:
               _context3.prev = 0;
-              if (confirm("seguro que desea cancelar la orden ?")) {
+              if (confirm("seguro que desea cancelar la orden, se limpiara su carro completamente ?")) {
                 _context3.next = 3;
                 break;
               }
@@ -294,257 +304,277 @@ var render = function () {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "card" }, [
     _c("div", { staticClass: "card-body" }, [
-      _c("table", { staticClass: "table table-striped mb-2" }, [
-        _vm._m(0),
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-md-6" }, [
+          _c("h2", [_vm._v("Detalle del carrito")]),
+          _vm._v(" "),
+          _c("div", { staticClass: "table-responsive" }, [
+            _c("table", { staticClass: "table table-striped mb-2" }, [
+              _vm._m(0),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                _vm._l(_vm.orden.detalles, function (detalle) {
+                  return _c("tr", [
+                    _c("th", { attrs: { scope: "row" } }, [
+                      _vm._v(_vm._s(detalle.producto.id)),
+                    ]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(detalle.producto.nombre))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v("$" + _vm._s(detalle.producto.precio))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(detalle.cantidad))]),
+                    _vm._v(" "),
+                    _c("td", [
+                      _vm._v(
+                        "$" + _vm._s(detalle.cantidad * detalle.producto.precio)
+                      ),
+                    ]),
+                  ])
+                }),
+                0
+              ),
+            ]),
+          ]),
+          _vm._v(" "),
+          _c("h2", { staticClass: "text-center" }, [
+            _vm._v("Total a pagar: $" + _vm._s(_vm.total)),
+          ]),
+        ]),
         _vm._v(" "),
-        _c(
-          "tbody",
-          _vm._l(_vm.orden.detalles, function (detalle) {
-            return _c("tr", [
-              _c("th", { attrs: { scope: "row" } }, [
-                _vm._v(_vm._s(detalle.producto.id)),
+        _c("div", { staticClass: "col-md-6" }, [
+          _c("h2", { staticClass: "text-center" }, [
+            _vm._v("Finalizar compra"),
+          ]),
+          _vm._v(" "),
+          _c("h4", { staticClass: "text-secondary" }, [
+            _vm._v("Completa la información"),
+          ]),
+          _vm._v(" "),
+          _vm.errores.length
+            ? _c(
+                "div",
+                { staticClass: "alert alert-danger", attrs: { role: "alert" } },
+                _vm._l(_vm.errores, function (error) {
+                  return _c("p", [_vm._v(_vm._s(error))])
+                }),
+                0
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _c(
+            "form",
+            {
+              on: {
+                submit: function ($event) {
+                  $event.preventDefault()
+                  return _vm.submit()
+                },
+              },
+            },
+            [
+              _c("div", { staticClass: "mb-3" }, [
+                _c(
+                  "label",
+                  { staticClass: "form-label", attrs: { for: "nombre" } },
+                  [_vm._v("Nombre completo")]
+                ),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.form.nombre_completo,
+                      expression: "form.nombre_completo",
+                    },
+                  ],
+                  staticClass: "form-control",
+                  attrs: {
+                    type: "text",
+                    id: "nombre",
+                    placeholder: "Nombre ...",
+                  },
+                  domProps: { value: _vm.form.nombre_completo },
+                  on: {
+                    input: function ($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.form, "nombre_completo", $event.target.value)
+                    },
+                  },
+                }),
               ]),
               _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(detalle.producto.nombre))]),
+              _c("div", { staticClass: "mb-3" }, [
+                _c(
+                  "label",
+                  { staticClass: "form-label", attrs: { for: "documento" } },
+                  [_vm._v("Documento")]
+                ),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.form.documento,
+                      expression: "form.documento",
+                    },
+                  ],
+                  staticClass: "form-control",
+                  attrs: {
+                    type: "number",
+                    id: "documento",
+                    placeholder: "documento ...",
+                  },
+                  domProps: { value: _vm.form.documento },
+                  on: {
+                    input: function ($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.form, "documento", $event.target.value)
+                    },
+                  },
+                }),
+              ]),
               _vm._v(" "),
-              _c("td", [_vm._v("$" + _vm._s(detalle.producto.precio))]),
+              _c("div", { staticClass: "mb-3" }, [
+                _c(
+                  "label",
+                  {
+                    staticClass: "form-label",
+                    attrs: { for: "tarjeta de credito" },
+                  },
+                  [_vm._v("Tarjeta de credito")]
+                ),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.form.tarjeta_credito,
+                      expression: "form.tarjeta_credito",
+                    },
+                  ],
+                  staticClass: "form-control",
+                  attrs: {
+                    type: "text",
+                    id: "tarjeta de credito",
+                    placeholder: "tarjeta de credito ...",
+                  },
+                  domProps: { value: _vm.form.tarjeta_credito },
+                  on: {
+                    input: function ($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.form, "tarjeta_credito", $event.target.value)
+                    },
+                  },
+                }),
+              ]),
               _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(detalle.cantidad))]),
+              _c("div", { staticClass: "mb-3" }, [
+                _c(
+                  "label",
+                  { staticClass: "form-label", attrs: { for: "cvc" } },
+                  [_vm._v("CVC")]
+                ),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.form.CVC,
+                      expression: "form.CVC",
+                    },
+                  ],
+                  staticClass: "form-control",
+                  attrs: { type: "number", id: "cvc", placeholder: "cvc ..." },
+                  domProps: { value: _vm.form.CVC },
+                  on: {
+                    input: function ($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.form, "CVC", $event.target.value)
+                    },
+                  },
+                }),
+              ]),
               _vm._v(" "),
-              _c("td", [
-                _vm._v(
-                  "$" + _vm._s(detalle.cantidad * detalle.producto.precio)
+              _c("div", { staticClass: "mb-3" }, [
+                _c(
+                  "label",
+                  {
+                    staticClass: "form-label",
+                    attrs: { for: "fecha_vencimiento" },
+                  },
+                  [_vm._v("Fecha vencimiendo de la tarjeta")]
+                ),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.form.fecha_vencimiento_tarjeta,
+                      expression: "form.fecha_vencimiento_tarjeta",
+                    },
+                  ],
+                  staticClass: "form-control",
+                  attrs: {
+                    type: "date",
+                    id: "fecha_vencimiento",
+                    placeholder: "fecha_vencimiento ...",
+                  },
+                  domProps: { value: _vm.form.fecha_vencimiento_tarjeta },
+                  on: {
+                    input: function ($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.form,
+                        "fecha_vencimiento_tarjeta",
+                        $event.target.value
+                      )
+                    },
+                  },
+                }),
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "btn-group" }, [
+                _c(
+                  "button",
+                  { staticClass: "btn btn-success", attrs: { type: "submit" } },
+                  [_vm._v("Finalizar")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-danger",
+                    attrs: { type: "button" },
+                    on: {
+                      click: function ($event) {
+                        return _vm.cancelar()
+                      },
+                    },
+                  },
+                  [_vm._v("Cancelar")]
                 ),
               ]),
-            ])
-          }),
-          0
-        ),
+            ]
+          ),
+        ]),
       ]),
-      _vm._v(" "),
-      _c("h2", { staticClass: "text-center" }, [
-        _vm._v("Total : $" + _vm._s(_vm.total)),
-      ]),
-      _vm._v(" "),
-      _c("h3", { staticClass: "text-center" }, [
-        _vm._v("Completa la información para finalizar la compra"),
-      ]),
-      _vm._v(" "),
-      _vm.errores.length
-        ? _c(
-            "div",
-            { staticClass: "alert alert-danger", attrs: { role: "alert" } },
-            _vm._l(_vm.errores, function (error) {
-              return _c("p", [_vm._v(_vm._s(error))])
-            }),
-            0
-          )
-        : _vm._e(),
-      _vm._v(" "),
-      _c(
-        "form",
-        {
-          on: {
-            submit: function ($event) {
-              $event.preventDefault()
-              return _vm.submit()
-            },
-          },
-        },
-        [
-          _c("div", { staticClass: "mb-3" }, [
-            _c(
-              "label",
-              { staticClass: "form-label", attrs: { for: "nombre" } },
-              [_vm._v("Nombre completo")]
-            ),
-            _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.form.nombre_completo,
-                  expression: "form.nombre_completo",
-                },
-              ],
-              staticClass: "form-control",
-              attrs: { type: "text", id: "nombre", placeholder: "Nombre ..." },
-              domProps: { value: _vm.form.nombre_completo },
-              on: {
-                input: function ($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.form, "nombre_completo", $event.target.value)
-                },
-              },
-            }),
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "mb-3" }, [
-            _c(
-              "label",
-              { staticClass: "form-label", attrs: { for: "documento" } },
-              [_vm._v("Documento")]
-            ),
-            _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.form.documento,
-                  expression: "form.documento",
-                },
-              ],
-              staticClass: "form-control",
-              attrs: {
-                type: "text",
-                id: "documento",
-                placeholder: "documento ...",
-              },
-              domProps: { value: _vm.form.documento },
-              on: {
-                input: function ($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.form, "documento", $event.target.value)
-                },
-              },
-            }),
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "mb-3" }, [
-            _c(
-              "label",
-              {
-                staticClass: "form-label",
-                attrs: { for: "tarjeta de credito" },
-              },
-              [_vm._v("Tarjeta de credito")]
-            ),
-            _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.form.tarjeta_credito,
-                  expression: "form.tarjeta_credito",
-                },
-              ],
-              staticClass: "form-control",
-              attrs: {
-                type: "text",
-                id: "tarjeta de credito",
-                placeholder: "tarjeta de credito ...",
-              },
-              domProps: { value: _vm.form.tarjeta_credito },
-              on: {
-                input: function ($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.form, "tarjeta_credito", $event.target.value)
-                },
-              },
-            }),
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "mb-3" }, [
-            _c("label", { staticClass: "form-label", attrs: { for: "cvc" } }, [
-              _vm._v("CVC"),
-            ]),
-            _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.form.CVC,
-                  expression: "form.CVC",
-                },
-              ],
-              staticClass: "form-control",
-              attrs: { type: "text", id: "cvc", placeholder: "cvc ..." },
-              domProps: { value: _vm.form.CVC },
-              on: {
-                input: function ($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.form, "CVC", $event.target.value)
-                },
-              },
-            }),
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "mb-3" }, [
-            _c(
-              "label",
-              {
-                staticClass: "form-label",
-                attrs: { for: "fecha_vencimiento" },
-              },
-              [_vm._v("Fecha vencimiendo de la tarjeta")]
-            ),
-            _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.form.fecha_vencimiento_tarjeta,
-                  expression: "form.fecha_vencimiento_tarjeta",
-                },
-              ],
-              staticClass: "form-control",
-              attrs: {
-                type: "date",
-                id: "fecha_vencimiento",
-                placeholder: "fecha_vencimiento ...",
-              },
-              domProps: { value: _vm.form.fecha_vencimiento_tarjeta },
-              on: {
-                input: function ($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(
-                    _vm.form,
-                    "fecha_vencimiento_tarjeta",
-                    $event.target.value
-                  )
-                },
-              },
-            }),
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "btn-group" }, [
-            _c(
-              "button",
-              { staticClass: "btn btn-success", attrs: { type: "submit" } },
-              [_vm._v("Finalizar")]
-            ),
-            _vm._v(" "),
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-danger",
-                attrs: { type: "button" },
-                on: {
-                  click: function ($event) {
-                    return _vm.cancelar()
-                  },
-                },
-              },
-              [_vm._v("Cancelar")]
-            ),
-          ]),
-        ]
-      ),
     ]),
   ])
 }

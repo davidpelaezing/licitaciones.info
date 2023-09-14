@@ -2,7 +2,9 @@
 
 <div class="card">
     <div class="card-body">
-    
+        
+        <h2>Lista de comentarios</h2>
+
         <ol class="list-group list-group-numbered mb-4">
             <li v-for="comentario in producto.comentarios" class="list-group-item d-flex justify-content-between align-items-start">
                 <div class="ms-2 me-auto">
@@ -15,8 +17,7 @@
 
         <form @submit.prevent="crearComentario()">
             <div class="mb-3">
-                <label for="descripcion" class="form-label">Comentario</label>
-                <textarea class="form-control" v-model="form.texto" id="descripcion" rows="3"></textarea>
+                <textarea class="form-control" v-model="form.texto" id="descripcion" rows="3" placeholder="Escribe tu comentario aqui"></textarea>
             </div>
             <button type="submit" class="btn btn-primary">Agregar Comentario</button>
         </form>

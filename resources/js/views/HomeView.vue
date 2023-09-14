@@ -1,20 +1,35 @@
 <template>
     <div class="row">
-        <div class="col-md-6">
+
+        <div class="col-lg-3">
+            <h2>Filtros</h2>
+            <div class="col-12">
+                <select class="form-select mb-3" v-model="filtro.categoria_id" aria-label="Default select example" @change="getProductos()">
+                    <option selected :value="null">Filtra por una categoria</option>
+                    <option v-for="categoria in categorias" :value="categoria.id">{{ categoria.nombre }} ({{ categoria.productos_count }})</option>
+                </select>
+            </div>
+            <div class="col-12 mb-2">
+                <select class="form-select mb-3" v-model="filtro.orden" aria-label="Default select example" @change="getProductos()">
+                    <option selected value="desc">Decendente</option>
+                    <option selected value="asc">Asendente</option>
+                </select>
+            </div>
+
+            <CarroProductoComponent 
+                :orden="orden"
+                @submit="miOrden()"
+                v-if="orden.detalles.length"
+            />
+            
+        </div>
+        
+        
+
+        <div class="col-lg-9">
             <h2>Lista de productos</h2>
-
-            <select class="form-select mb-3" v-model="filtro.categoria_id" aria-label="Default select example" @change="getProductos()">
-                <option selected :value="null">Filtra por una categoria</option>
-                <option v-for="categoria in categorias" :value="categoria.id">{{ categoria.nombre }} ({{ categoria.productos_count }})</option>
-            </select>
-
-            <select class="form-select mb-3" v-model="filtro.orden" aria-label="Default select example" @change="getProductos()">
-                <option selected value="desc">Decendente</option>
-                <option selected value="asc">Asendente</option>
-            </select>
-
             <div class="row mb-4">
-                <div v-for="producto in productos" class="col-lg-4 col-md-6">
+                <div v-for="producto in productos" class="col-lg-3 col-md-4 mb-1">
                     <CardProductoComponent
                         :producto="producto"
                         :key="producto.id"
@@ -22,26 +37,16 @@
                     />
                 </div>
             </div>
-            <nav aria-label="Page navigation example">
-                <ul class="pagination">
-                    <li class="page-item"><a class="page-link" href="#" @click.prevent="getProductos(paginacion.current_page - 1)">Anterior</a></li>
-                    <li class="page-item" v-for="page in paginacion.last_page"><a class="page-link" href="#" @click.prevent="getProductos(page)">{{ page }}</a></li>
-                    <li class="page-item"><a class="page-link" href="#" @click.prevent="getProductos(paginacion.current_page + 1)">Siguiente</a></li>
-                </ul>
-            </nav>
+            <pagination :data="paginacion" :limit="2" @pagination-change-page="getProductos"></pagination>
         </div>
-        <div class="col-md-4">
-            <h2>Mi carrito</h2>
-            <CarroProductoComponent 
-                :orden="orden"
-                @submit="miOrden()"
-            />
-        </div>
+
+        
+        
     </div>
 </template>
 <script>
-import CardProductoComponent from '../components/producto/CardProductoComponent.vue';
 import CarroProductoComponent from '../components/producto/CarroProductoComponent.vue';
+import CardProductoComponent from '../components/producto/CardProductoComponent.vue';
 export default {
     components: {
     CardProductoComponent,
@@ -52,10 +57,9 @@ export default {
         return {
             productos: [],
             categorias: [],
-            orden: null,
-            paginacion:{
-                current_page: 1,
-                last_page: 1
+            paginacion: null,
+            orden: {
+                detalles: [],
             },
             filtro: {
                 categoria_id: null,
@@ -74,20 +78,13 @@ export default {
 
         async getProductos(page = 1){
             try {
-
-                /** validamos la paginacion */
-                if(page > this.paginacion.last_page || page < 1){
-                    return false;
-                }
-
                 const categoria = this.filtro.categoria_id ? this.filtro.categoria_id : '';
 
                 const response = await this.axios.get('/producto?page=' + page + '&categoria_id=' + categoria + '&order=' + this.filtro.orden)
-                this.paginacion.current_page = response.data.current_page
-                this.paginacion.last_page = response.data.last_page
                 this.productos = response.data.data
+                this.paginacion = response.data
             } catch (error) {
-                console.log(error.response)
+                this.$snotify.warning('¡Hay errores con la peticion!', '¡Error!')
             }
         },
 
@@ -96,7 +93,7 @@ export default {
                 const response = await this.axios.get('/orden/mi-orden')
                 this.orden = response.data
             }catch (error) {
-                console.log(error.response)
+                this.$snotify.warning('¡Hay errores con la peticion!', '¡Error!')
             }
         },
 
@@ -105,7 +102,7 @@ export default {
                 const response = await this.axios.get('/categoria');
                 this.categorias = response.data;
             } catch (error) {
-                console.log(error)
+                this.$snotify.warning('¡Hay errores con la peticion!', '¡Error!')
             }
         },
 

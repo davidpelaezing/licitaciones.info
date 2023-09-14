@@ -1,10 +1,13 @@
 <template>
-    <div class="card" style="width: 100%;">
-        <img src="https://picsum.photos/100/100" class="card-img-top" alt="...">
+    <div class="card shadow-sm" style="width: 100%;">
+        <img :src="cargarlink(producto.imagen_url)" width="200px" height="250px" class="card-img-top" alt="...">
         <div class="card-body">
             <h5 class="card-title">{{ producto.nombre }}</h5>
             <h4 class="card-title">${{ producto.precio }}</h4>
             <span class="badge bg-secondary">{{ producto.categoria.nombre}}</span>
+            <div>
+                <span v-for="tag in producto.tags" class="badge bg-primary">{{ tag.nombre }}</span>
+            </div>
             <p class="card-text">{{ producto.descripcion }}</p>
 
             <button class="btn btn-sm btn-warning mb-2" @click="verDetalle()">Detalle</button>
@@ -53,6 +56,10 @@ export default {
                     this.$router.push('/login')
                 }
             }
+        },
+
+        cargarlink(link){
+            return link ? 'http://localhost:8000/storage/productos/' + link : 'https://picsum.photos/100/100'
         },
 
         limpiar(){
