@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class AuthController extends Controller
 {
@@ -45,7 +46,9 @@ class AuthController extends Controller
         try {
             // Buscamos el usuario
             $usuario = User::where('email', $request->email)->firstOrFail();
-
+            $usuario->update([
+                'actividad' => Carbon::now()
+            ]);
             // Validamos que el usuario este activo
             if (!$usuario->estado) {
                 return response()->json('Cuenta Ban', 401);
