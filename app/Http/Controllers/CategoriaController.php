@@ -19,11 +19,12 @@ class CategoriaController extends Controller
     public function listar(Request $request): JsonResponse
     {
         try {
-            $categorias = Categoria::withCount('productos')->get();
+            $categorias = Categoria::withCount('productos');
+            $data = $request->page ? $categorias->paginate(10) : $categorias->get();
         } catch (\Throwable $th) {
             return response()->json($th->getMessage(), 400);
         }
-        return response()->json($categorias);
+        return response()->json($data);
     }
 
     /**

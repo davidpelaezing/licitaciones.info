@@ -46,7 +46,7 @@ mounted(){
 },
 
 watch: {
-    data_editar(nuevoValor, valorAnterior) {
+    data_editar() {
         this.editar() 
     }
 },
@@ -57,17 +57,20 @@ methods: {
         try {
             if (this.editando){
                 await this.axios.put('/categoria/actualizar/' + this.data_editar.id, this.form);
-                this.$toastr.success('¡El recurso se actualizo con exito!', '¡Exelente!')
+                this.$snotify.success('¡El recurso se actualizo con exito!', '¡Exelente!')
             }else{
                 await this.axios.post('/categoria/crear', this.form);
-                this.$toastr.success('¡El recurso se creo con exito!', '¡Exelente!')
+                this.$snotify.success('¡El recurso se creo con exito!', '¡Exelente!')
             }
             this.limpiar()
             this.$emit('submit')
         } catch (error) {
-            this.errores = Object.values(error.response.data).reduce((accumulator, currentArray) => {
-                return accumulator.concat(currentArray);
-            }, []);
+            if(error.response.status === 422){
+                this.errores = Object.values(error.response.data).reduce((accumulator, currentArray) => {
+                    return accumulator.concat(currentArray);
+                }, []);
+            }   
+            this.$snotify.warning('¡Hay errores con la peticion!', '¡Error!')
         }
     },
 

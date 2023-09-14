@@ -3137,19 +3137,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             case 17:
               _this3.limpiar();
               _this3.$emit('submit');
-              _context3.next = 26;
+              _context3.next = 25;
               break;
             case 21:
               _context3.prev = 21;
               _context3.t0 = _context3["catch"](0);
-              console.log(_context3.t0);
               if (_context3.t0.response.status === 422) {
                 _this3.errores = Object.values(_context3.t0.response.data).reduce(function (accumulator, currentArray) {
                   return accumulator.concat(currentArray);
                 }, []);
               }
               _this3.$snotify.warning('¡Hay errores con la peticion!', '¡Error!');
-            case 26:
+            case 25:
             case "end":
               return _context3.stop();
           }
@@ -3371,21 +3370,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               return _this3.axios.put('/producto/cambiar-estado/' + item.id);
             case 5:
               response = _context3.sent;
-              _this3.$toastr.success('¡El recurso se actualizo con exito!', '¡Exelente!');
+              _this3.$snotify.success('¡El recurso se actualizo con exito!', '¡Exelente!');
               _this3.getProductos();
-              console.log(response);
-              _context3.next = 15;
+              _context3.next = 13;
               break;
-            case 11:
-              _context3.prev = 11;
+            case 10:
+              _context3.prev = 10;
               _context3.t0 = _context3["catch"](0);
-              console.log(_context3.t0);
-              console.log(_context3.t0.response);
-            case 15:
+              _this3.$snotify.warning('¡Hay errores con la peticion!', '¡Error!');
+            case 13:
             case "end":
               return _context3.stop();
           }
-        }, _callee3, null, [[0, 11]]);
+        }, _callee3, null, [[0, 10]]);
       }))();
     },
     cargarlink: function cargarlink(link) {

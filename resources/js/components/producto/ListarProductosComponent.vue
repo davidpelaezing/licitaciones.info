@@ -123,12 +123,10 @@ export default {
                     return false;
                 }
                 const response = await this.axios.put('/producto/cambiar-estado/' + item.id);
-                this.$toastr.success('¡El recurso se actualizo con exito!', '¡Exelente!')
+                this.$snotify.success('¡El recurso se actualizo con exito!', '¡Exelente!')
                 this.getProductos();
-                console.log(response)
             }catch (error) {
-                console.log(error)
-                console.log(error.response)
+                this.$snotify.warning('¡Hay errores con la peticion!', '¡Error!')
             }
         },
 

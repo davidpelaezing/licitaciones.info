@@ -48,6 +48,7 @@
                 </tbody>
             </table>
         </div>
+        <pagination :data="paginacion" :limit="2" @pagination-change-page="getCategorias"></pagination>
     </div>
     
 </template>
@@ -62,6 +63,7 @@ export default {
     data(){
         return {
             categorias: [],
+            paginacion: null,
             modal: null,
             editando: false,
             data_editar: null
@@ -75,10 +77,11 @@ export default {
 
     methods: {
 
-        async getCategorias(){
+        async getCategorias(page = 1){
             try {
-                const response = await this.axios.get('/categoria')
-                this.categorias = response.data
+                const response = await this.axios.get('/categoria?page=' + page)
+                this.categorias = response.data.data
+                this.paginacion = response.data
             } catch (error) {
                 console.log(error.response)
             }
@@ -90,11 +93,10 @@ export default {
                     return false;
                 }
                 const response = await this.axios.put('/categoria/cambiar-estado/' + item.id);
-                this.$toastr.success('¡El recurso se actualizo con exito!', '¡Exelente!')
+                this.$snotify.success('¡El recurso se actualizo con exito!', '¡Exelente!')
                 this.getCategorias();
             }catch (error) {
-                console.log(error)
-                console.log(error.response)
+                this.$snotify.warning('¡Hay errores con la peticion!', '¡Error!')
             }
         },  
 

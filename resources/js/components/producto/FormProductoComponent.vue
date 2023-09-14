@@ -130,7 +130,6 @@ methods: {
             this.limpiar()
             this.$emit('submit')
         } catch (error) {
-            console.log(error)
             if(error.response.status === 422){
                 this.errores = Object.values(error.response.data).reduce((accumulator, currentArray) => {
                     return accumulator.concat(currentArray);
