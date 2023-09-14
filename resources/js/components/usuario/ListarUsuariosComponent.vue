@@ -84,6 +84,11 @@ export default {
     mounted(){
         this.modal = new Modal(this.$refs.usuarioModal)
         this.getUsuarios();
+
+        // Simulo tiempo real
+        setInterval(() => {
+            this.getUsuarios();
+        }, 1 * 60 * 1000);
     },
 
     methods: {

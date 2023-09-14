@@ -3198,13 +3198,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     };
   },
   mounted: function mounted() {
+    var _this = this;
     this.modal = new bootstrap__WEBPACK_IMPORTED_MODULE_1__.Modal(this.$refs.usuarioModal);
     this.getUsuarios();
+
+    // Simulo tiempo real
+    setInterval(function () {
+      _this.getUsuarios();
+    }, 1 * 60 * 1000);
   },
   methods: {
     getUsuarios: function getUsuarios() {
       var _arguments = arguments,
-        _this = this;
+        _this2 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
         var page, response;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
@@ -3213,17 +3219,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               page = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : 1;
               _context.prev = 1;
               _context.next = 4;
-              return _this.axios.get('/user?page=' + page);
+              return _this2.axios.get('/user?page=' + page);
             case 4:
               response = _context.sent;
-              _this.usuarios = response.data.data;
-              _this.paginacion = response.data;
+              _this2.usuarios = response.data.data;
+              _this2.paginacion = response.data;
               _context.next = 12;
               break;
             case 9:
               _context.prev = 9;
               _context.t0 = _context["catch"](1);
-              _this.$snotify.warning('¡Hay errores con la peticion!', '¡Error!');
+              _this2.$snotify.warning('¡Hay errores con la peticion!', '¡Error!');
             case 12:
             case "end":
               return _context.stop();
@@ -3232,7 +3238,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     cambiarEstado: function cambiarEstado(item) {
-      var _this2 = this;
+      var _this3 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
         return _regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
@@ -3245,16 +3251,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               return _context2.abrupt("return", false);
             case 3:
               _context2.next = 5;
-              return _this2.axios.put('/user/cambiar-estado/' + item.id);
+              return _this3.axios.put('/user/cambiar-estado/' + item.id);
             case 5:
-              _this2.$snotify.success('¡El recurso se actualizo con exito!', '¡Exelente!');
-              _this2.getUsuarios();
+              _this3.$snotify.success('¡El recurso se actualizo con exito!', '¡Exelente!');
+              _this3.getUsuarios();
               _context2.next = 12;
               break;
             case 9:
               _context2.prev = 9;
               _context2.t0 = _context2["catch"](0);
-              _this2.$snotify.warning('¡Hay errores con la peticion!', '¡Error!');
+              _this3.$snotify.warning('¡Hay errores con la peticion!', '¡Error!');
             case 12:
             case "end":
               return _context2.stop();
