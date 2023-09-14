@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->boolean('admin')->default(false);
             $table->boolean('estado')->default(true);
-            $table->dateTime('actividad')->nullable();
+            $table->timestamp('actividad')->nullable();
             $table->timestamps();
         });
     }

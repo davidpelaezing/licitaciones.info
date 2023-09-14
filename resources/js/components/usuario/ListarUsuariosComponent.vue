@@ -32,6 +32,7 @@
                     <th scope="col">nombre</th>
                     <th scope="col">email</th>
                     <th scope="col">admin</th>
+                    <th scope="col">online</th>
                     <th scope="col">estado</th>
                     <th scope="col">acciones</th>
                 </thead>
@@ -41,6 +42,12 @@
                         <td>{{ usuario.nombre }}</td>
                         <td>{{ usuario.email }}</td>
                         <td>{{ usuario.admin ? 'Si' : 'No'}}</td>
+                        <td>
+                            <div class="spinner-grow text-success" role="status" v-if="usuario.isActivo">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <span v-else>Offline</span>
+                        </td>
                         <td>{{ usuario.estado ? 'Activo' : 'Inactivo' }}</td>
                         <td>
                             <div class="btn-group">

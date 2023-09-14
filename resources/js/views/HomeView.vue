@@ -71,9 +71,9 @@ export default {
     mounted(){
         this.getProductos()
         this.getCategorias()
-        this.miOrden()
-        console.log(this.isAdmin())
-        console.log(this.getToken())
+        if(this.getToken()){
+            this.miOrden()
+        }
     },
 
     methods: {

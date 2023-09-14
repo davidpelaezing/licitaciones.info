@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NuevoProductoAgregadoEvent;
 use App\Http\Requests\ActualizarDetalleOrdenRequest;
 use App\Http\Requests\CrearDetalleOrdenRequest;
 use App\Models\DetalleOrden;
@@ -35,6 +36,7 @@ class DetalleOrdenController extends Controller
             $data['orden_id'] = $orden->id;
 
             $detalle = DetalleOrden::create($data);
+            event(new NuevoProductoAgregadoEvent());
         } catch (\Throwable $th) {
             DB::rollBack();
             return response()->json($th->getMessage(), 400);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NuevaFacturaRegistradaEvent;
 use App\Http\Requests\ActualizarFacturaRequest;
 use App\Http\Requests\CrearFacturaRequest;
 use App\Models\DetalleFactura;
@@ -81,6 +82,8 @@ class FacturaController extends Controller
             }
             // cambiamos el estado de la orden
             $orden->cambiarEstado(2);
+            /** disparamos el evento */
+            event(new NuevaFacturaRegistradaEvent());
         } catch (\Throwable $th) {
             DB::rollBack();
             return response()->json($th->getMessage(), 400);

@@ -3174,6 +3174,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -8317,6 +8324,23 @@ var render = function () {
                 _c("td", [_vm._v(_vm._s(usuario.admin ? "Si" : "No"))]),
                 _vm._v(" "),
                 _c("td", [
+                  usuario.isActivo
+                    ? _c(
+                        "div",
+                        {
+                          staticClass: "spinner-grow text-success",
+                          attrs: { role: "status" },
+                        },
+                        [
+                          _c("span", { staticClass: "visually-hidden" }, [
+                            _vm._v("Loading..."),
+                          ]),
+                        ]
+                      )
+                    : _c("span", [_vm._v("Offline")]),
+                ]),
+                _vm._v(" "),
+                _c("td", [
                   _vm._v(_vm._s(usuario.estado ? "Activo" : "Inactivo")),
                 ]),
                 _vm._v(" "),
@@ -8378,6 +8402,8 @@ var staticRenderFns = [
       _c("th", { attrs: { scope: "col" } }, [_vm._v("email")]),
       _vm._v(" "),
       _c("th", { attrs: { scope: "col" } }, [_vm._v("admin")]),
+      _vm._v(" "),
+      _c("th", { attrs: { scope: "col" } }, [_vm._v("online")]),
       _vm._v(" "),
       _c("th", { attrs: { scope: "col" } }, [_vm._v("estado")]),
       _vm._v(" "),

@@ -483,9 +483,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   mounted: function mounted() {
     this.getProductos();
     this.getCategorias();
-    this.miOrden();
-    console.log(this.isAdmin());
-    console.log(this.getToken());
+    if (this.getToken()) {
+      this.miOrden();
+    }
   },
   methods: {
     getProductos: function getProductos() {

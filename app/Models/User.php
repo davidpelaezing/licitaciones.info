@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -23,8 +24,11 @@ class User extends Authenticatable
         'email',
         'password',
         'admin',
-        'estado'
+        'estado',
+        'actividad'
     ];
+
+    protected $appends = ['isActivo'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -64,5 +68,16 @@ class User extends Authenticatable
         return $this->update([
             'estado' => !$this->estado
         ]);
+    }
+
+    public function getIsActivoAttribute(): bool
+    {
+        if ($this->actividad) {
+            $actividad = Carbon::parse($this->actividad);
+            $diferencia_en_minutos = $actividad->diffInMinutes(Carbon::now());
+            return $diferencia_en_minutos < 2;
+        } else {
+            return false;
+        }
     }
 }
