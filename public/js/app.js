@@ -2119,6 +2119,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  data: function data() {
+    return {
+      usuario: null
+    };
+  },
+  mounted: function mounted() {
+    this.usuario = JSON.parse(localStorage.getItem("user"));
+  },
   methods: {
     logout: function logout() {
       var _this = this;
@@ -3800,7 +3808,14 @@ var render = function () {
           _c(
             "router-link",
             { staticClass: "navbar-brand", attrs: { to: "/" } },
-            [_vm._v("Licitaciones.info")]
+            [
+              _vm._v(
+                "Licitaciones.info - " +
+                  _vm._s(
+                    this.getToken() != null ? _vm.usuario.nombre : "invitado"
+                  )
+              ),
+            ]
           ),
           _vm._v(" "),
           _vm._m(0),

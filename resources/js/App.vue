@@ -2,7 +2,7 @@
 <div>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-            <router-link to="/" class="navbar-brand">Licitaciones.info</router-link>
+            <router-link to="/" class="navbar-brand">Licitaciones.info - {{ this.getToken() != null ? usuario.nombre : 'invitado' }}</router-link>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -49,6 +49,16 @@
 <script>
 
 export default {
+
+    data(){
+        return {
+            usuario: null
+        }
+    },
+
+    mounted(){
+        this.usuario = JSON.parse(localStorage.getItem("user"));
+    },
 
     methods: {
 
