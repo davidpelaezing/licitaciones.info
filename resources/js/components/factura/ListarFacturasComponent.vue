@@ -2,6 +2,7 @@
     <div>
         <div class="d-flex justify-content-between align-items-center mb-4">   
             <h3>Facturas</h3>
+            <button type="button" class="btn btn-success" @click="descargar()" v-if="isAdmin()">descargar productos</button>
             <button type="button" class="btn btn-success" @click="crear()" v-if="isAdmin()">Crear factura</button>
         </div>
         
@@ -115,6 +116,20 @@ export default {
                 this.facturas = response.data.data
                 this.paginacion = response.data
             } catch (error) {
+                this.$snotify.warning('¡Hay errores con la peticion!', '¡Error!')
+            }
+        },
+
+        async descargar(){
+            try {
+                const response = await this.axios.get('/factura/exportar', { responseType: 'blob' })
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'productos.xlsx');
+                document.body.appendChild(link);
+                link.click();
+            }catch(error) {
                 this.$snotify.warning('¡Hay errores con la peticion!', '¡Error!')
             }
         },

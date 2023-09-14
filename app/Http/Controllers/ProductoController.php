@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ActualizarProductoRequest;
 use App\Http\Requests\CrearProductoRequest;
+use App\Models\DetalleFactura;
 use App\Models\Producto;
 use App\Traits\ImagenTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Rap2hpoutre\FastExcel\FastExcel;
 
 class ProductoController extends Controller
 {

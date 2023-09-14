@@ -10,8 +10,10 @@ use App\Models\Factura;
 use App\Models\Orden;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Rap2hpoutre\FastExcel\FastExcel;
 
 class FacturaController extends Controller
 {
@@ -118,5 +120,23 @@ class FacturaController extends Controller
     public function consultar(Request $request, Factura $factura): JsonResponse
     {
         return response()->json($factura);
+    }
+
+    /**
+     * Exporta los datos en un excel
+     * @param Request $request
+     * @return xls
+     * @author David Peláez
+     */
+    public function exportar(Request $request)
+    {
+        //$consulta = Artisan::call('producto:exports');
+        //return response()->json($consulta);
+        $consulta = DB::table('detalle_facturas')
+            ->join('productos', 'detalle_facturas.producto_id', '=', 'productos.id')
+            ->select('detalle_facturas.producto_id', 'productos.nombre', DB::raw('SUM(detalle_facturas.cantidad) as total_cantidad'))
+            ->groupBy('detalle_facturas.producto_id', 'productos.nombre')
+            ->get();
+        return (new FastExcel($consulta))->download('productos.xlsx');
     }
 }

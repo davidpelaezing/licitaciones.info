@@ -3312,6 +3312,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 
 
 
@@ -3365,6 +3366,39 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               return _context.stop();
           }
         }, _callee, null, [[1, 9]]);
+      }))();
+    },
+    descargar: function descargar() {
+      var _this2 = this;
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+        var response, url, link;
+        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+          while (1) switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.prev = 0;
+              _context2.next = 3;
+              return _this2.axios.get('/factura/exportar', {
+                responseType: 'blob'
+              });
+            case 3:
+              response = _context2.sent;
+              url = window.URL.createObjectURL(new Blob([response.data]));
+              link = document.createElement('a');
+              link.href = url;
+              link.setAttribute('download', 'productos.xlsx');
+              document.body.appendChild(link);
+              link.click();
+              _context2.next = 15;
+              break;
+            case 12:
+              _context2.prev = 12;
+              _context2.t0 = _context2["catch"](0);
+              _this2.$snotify.warning('¡Hay errores con la peticion!', '¡Error!');
+            case 15:
+            case "end":
+              return _context2.stop();
+          }
+        }, _callee2, null, [[0, 12]]);
       }))();
     },
     detalle: function detalle(factura) {
@@ -8580,6 +8614,22 @@ var render = function () {
         },
         [
           _c("h3", [_vm._v("Facturas")]),
+          _vm._v(" "),
+          _vm.isAdmin()
+            ? _c(
+                "button",
+                {
+                  staticClass: "btn btn-success",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function ($event) {
+                      return _vm.descargar()
+                    },
+                  },
+                },
+                [_vm._v("descargar productos")]
+              )
+            : _vm._e(),
           _vm._v(" "),
           _vm.isAdmin()
             ? _c(
